@@ -1,62 +1,46 @@
-// CCAF guide: progress, daily goals, navigation, focus timer, spaced-repetition flashcards. No dependencies.
+// CCA-F study site: progress, navigation, focus timer, flashcards. No dependencies.
 (function () {
   "use strict";
-  var S = window.SITE || { pages: [], areas: {}, cardIds: [] };
+  var S = window.SITE || { pages: [], areas: {} };
   var R = window.ROOT || ".";
   var body = document.body;
   var ID = body.dataset.id;
   var AREA = body.dataset.area;
 
-  // ---------- storage (wrapped: private mode can throw) ----------
+  // ---------- storage (always wrapped: private mode can throw) ----------
   function load(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-  function day(offset) {
-    var d = new Date(); d.setDate(d.getDate() + (offset || 0));
-    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
-  }
   var done = load("cca-done", {});
   var url = function (href) { return R + "/" + href; };
   var page = S.pages.filter(function (p) { return p.id === ID; })[0];
   var isContent = !!page;
   if (isContent) save("cca-last", ID);
 
-  // Activity log shared with quiz.js: {"2026-10-28": {c: cards, q: questions, f: flashcards, n: new flashcards}}
-  window.CCA_LOG = function (kind) {
-    var days = load("cca-days", {}), t = day();
-    days[t] = days[t] || {}; days[t][kind] = (days[t][kind] || 0) + 1; save("cca-days", days);
-  };
-  function streak() {
-    var days = load("cca-days", {}), n = 0, i = days[day()] ? 0 : -1;
-    while (days[day(i)]) { n++; i--; }
-    return n;
-  }
-
   // ---------- toast ----------
   var toastEl = document.querySelector(".toast"), toastT;
-  function toast(html, ms) {
+  function toast(msg, ms) {
     if (!toastEl) return;
-    toastEl.innerHTML = html; toastEl.classList.add("show");
-    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("show"); }, ms || 2800);
+    toastEl.textContent = msg; toastEl.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("show"); }, ms || 2600);
   }
 
-  // ---------- reading progress ----------
+  // ---------- reading progress bar ----------
   var bar = document.querySelector(".scrollbar i");
   function onScroll() {
     var h = document.documentElement.scrollHeight - innerHeight;
-    if (bar) bar.style.width = (h > 0 ? Math.min(100, scrollY / h * 100) : 0) + "%";
+    if (bar) bar.style.width = (h > 0 ? Math.min(100, scrollY / h * 100) : 100) + "%";
   }
   addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
-  // ---------- helpers ----------
+  // ---------- area helpers ----------
   function pagesIn(area) { return S.pages.filter(function (p) { return p.area === area; }); }
   function countDone(list) { return list.filter(function (p) { return done[p.id]; }).length; }
   function nextUndone() {
     for (var i = 0; i < S.pages.length; i++) if (!done[S.pages[i].id]) return S.pages[i];
     return null;
   }
-  function label(p) { return (p.num ? p.num + " " : "") + p.short; }
 
-  // ---------- mini-map dots ----------
+  // ---------- mini-map dots in the top bar ----------
   function renderDots() {
     var box = document.querySelector(".dots");
     if (!box || !isContent) return;
@@ -64,36 +48,67 @@
     pagesIn(AREA).forEach(function (p) {
       var a = document.createElement("a");
       a.className = "dot" + (done[p.id] ? " done" : "") + (p.id === ID ? " here" : "");
-      a.href = url(p.href); a.title = label(p) + (done[p.id] ? " (done)" : "");
+      a.href = url(p.href);
+      a.title = (p.num ? p.num + " · " : "") + p.short + (done[p.id] ? " ✓" : "");
       a.setAttribute("aria-label", a.title);
       box.appendChild(a);
     });
   }
 
-  // ---------- done ----------
+  // ---------- done button + confetti ----------
   var doneBtn = document.querySelector(".done-btn");
   function renderDone() {
     if (!doneBtn) return;
     var on = !!done[ID];
     doneBtn.classList.toggle("on", on);
-    doneBtn.querySelector(".lbl").textContent = on ? "Done" : "Mark done";
+    doneBtn.querySelector("b").textContent = on ? "✅" : "⬜";
+    doneBtn.querySelector("small").textContent = on ? "Done!" : "Done?";
   }
   function toggleDone() {
     if (!isContent) return;
-    if (done[ID]) delete done[ID];
+    if (done[ID]) { delete done[ID]; }
     else {
-      done[ID] = Date.now(); window.CCA_LOG("c");
-      doneBtn.classList.add("pop"); setTimeout(function () { doneBtn.classList.remove("pop"); }, 450);
-      var list = pagesIn(AREA), left = list.length - countDone(list), a = S.areas[AREA] || {};
+      done[ID] = Date.now();
+      doneBtn && doneBtn.classList.add("pop");
+      setTimeout(function () { doneBtn && doneBtn.classList.remove("pop"); }, 400);
+      confetti();
+      var list = pagesIn(AREA), n = countDone(list);
+      var a = S.areas[AREA] || {};
       var total = countDone(S.pages);
-      if (total === S.pages.length) toast("Every star is lit. Time for the mock exam.", 4000);
-      else if (!left) toast("<b>" + a.name + "</b> complete. The whole area is lit on your map.", 3600);
-      else toast("<b>" + label(page) + "</b> is lit on your map. " + left + " left in " + a.name + ".");
+      if (total === S.pages.length) toast("🏆 Everything done. Now go take the mock exams!", 4000);
+      else if (n === list.length) toast("🎉 " + a.emoji + " " + a.name + " complete!", 3500);
+      else toast(["Nice! 💪", "One more piece of the puzzle 🧩", "Locked in 🔒", "Keep the streak going 🔥"][total % 4] +
+        "  " + n + "/" + list.length + " in this area");
     }
     save("cca-done", done);
     renderDone(); renderDots();
   }
   if (doneBtn) doneBtn.addEventListener("click", toggleDone);
+
+  function confetti() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var c = document.createElement("canvas"), x = c.getContext("2d");
+    c.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:40";
+    c.width = innerWidth; c.height = innerHeight; document.body.appendChild(c);
+    var col = getComputedStyle(body).getPropertyValue("--a").trim() || "#fb923c";
+    var cols = [col, "#4ade80", "#ecebe7", col];
+    var ox = doneBtn ? doneBtn.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight - 60, width: 0 };
+    var ps = [];
+    for (var i = 0; i < 70; i++) ps.push({
+      x: ox.left + ox.width / 2, y: ox.top, vx: (Math.random() - .5) * 9, vy: -Math.random() * 12 - 5,
+      s: Math.random() * 6 + 4, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[i % cols.length]
+    });
+    var t = 0;
+    (function tick() {
+      x.clearRect(0, 0, c.width, c.height);
+      ps.forEach(function (p) {
+        p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c;
+        x.globalAlpha = Math.max(0, 1 - t / 70); x.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); x.restore();
+      });
+      if (++t < 70) requestAnimationFrame(tick); else c.remove();
+    })();
+  }
 
   // ---------- focus timer ----------
   var timerBtn = document.querySelector(".timer"), tLeft, tInt;
@@ -101,28 +116,32 @@
   function toggleTimer() {
     if (!timerBtn) return;
     var span = timerBtn.querySelector("span");
-    if (timerBtn.classList.contains("end")) {
+    if (timerBtn.classList.contains("end")) { // reset after it rang
       timerBtn.classList.remove("end"); tLeft = null; span.textContent = timerBtn.dataset.min + ":00"; return;
     }
-    if (tInt) { clearInterval(tInt); tInt = null; timerBtn.classList.remove("run"); toast("Timer paused"); return; }
+    if (tInt) { clearInterval(tInt); tInt = null; timerBtn.classList.remove("run"); toast("⏸ Paused"); return; }
     if (!tLeft) tLeft = (+timerBtn.dataset.min || 3) * 60;
-    timerBtn.classList.add("run"); toast("Focus on just this page. Nothing else.");
+    timerBtn.classList.add("run"); toast("⏱ Focus: just this one page. You've got this.");
     tInt = setInterval(function () {
       tLeft--; span.textContent = fmt(tLeft);
       if (tLeft <= 0) {
         clearInterval(tInt); tInt = null; timerBtn.classList.remove("run"); timerBtn.classList.add("end");
-        if (navigator.vibrate) navigator.vibrate([120, 80, 120]);
-        toast(done[ID] ? "Time. Stand up and stretch for two minutes." : "Time. Answer the question at the bottom, mark done, then take a short break.", 5000);
+        span.textContent = "0:00";
+        if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+        toast(done[ID] ? "⏰ Time! Card done. Stand up for 2 minutes 🚶" : "⏰ Time! Finish the 🧠 question, mark done, then a short break.", 5000);
       }
     }, 1000);
   }
   if (timerBtn) timerBtn.addEventListener("click", toggleTimer);
 
-  // ---------- keyboard + swipe ----------
-  function go(dir) { var h = body.dataset[dir]; if (h) location.href = h; }
+  // ---------- keyboard + swipe navigation ----------
+  function go(dir) {
+    var h = body.dataset[dir];
+    if (h) location.href = h;
+  }
   addEventListener("keydown", function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test(e.target.tagName)) return;
-    if (body.classList.contains("is-flash") || body.classList.contains("is-quiz")) return;
+    if (body.classList.contains("is-flash") || body.classList.contains("is-quiz")) return; // own keys
     if (e.key === "ArrowRight") go("next");
     else if (e.key === "ArrowLeft") go("prev");
     else if (e.key === "d") toggleDone();
@@ -133,7 +152,7 @@
   var sx, sy, st, skip;
   addEventListener("touchstart", function (e) {
     var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now();
-    skip = !!e.target.closest(".tw, pre, .stage, .sky-canvas");
+    skip = !!e.target.closest(".tw, pre, .stage");
   }, { passive: true });
   addEventListener("touchend", function (e) {
     if (skip || sx == null || !isContent) return;
@@ -142,139 +161,95 @@
     sx = null;
   }, { passive: true });
   if (isContent && "ontouchstart" in window && !load("cca-swipe-hint", false)) {
-    var h = document.createElement("div"); h.className = "swipe-hint"; h.textContent = "Swipe left or right to change page";
+    var h = document.createElement("div"); h.className = "swipe-hint"; h.textContent = "👆 Swipe ← → to move between pages";
     document.body.appendChild(h); save("cca-swipe-hint", true);
     setTimeout(function () { h.remove(); }, 2600);
   }
 
-  // ---------- spaced repetition (Leitner boxes) ----------
-  var INTERVALS = [0, 1, 3, 7, 14, 30]; // days until next review, by box
-  var NEW_PER_DAY = 10;
-  function srs() { return load("cca-srs", {}); }
-  function dueList(ids) {
-    var s = srs(), t = day(), today = load("cca-days", {})[t] || {};
-    var reviews = ids.filter(function (id) { return s[id] && s[id].due <= t; });
-    var fresh = ids.filter(function (id) { return !s[id]; }).slice(0, Math.max(0, NEW_PER_DAY - (today.n || 0)));
-    return reviews.concat(fresh);
+  // ---------- home page ----------
+  function setRing(el, frac) {
+    var f = el && el.querySelector(".rf");
+    if (f) f.setAttribute("stroke-dasharray", (Math.max(0, Math.min(1, frac)) * 100).toFixed(1) + " 100");
   }
-  function grade(id, knew) {
-    var s = srs(), c = s[id], t = day();
-    if (!c) { window.CCA_LOG("n"); c = { box: 0 }; }
-    c.box = knew ? Math.min(5, c.box + 1) : 1;
-    var d = new Date(); d.setDate(d.getDate() + (knew ? INTERVALS[c.box] : 0));
-    c.due = knew ? d.toISOString().slice(0, 10) : t;
-    s[id] = c; save("cca-srs", s); window.CCA_LOG("f");
-  }
-
-  // ---------- home ----------
   function renderHome() {
     if (!body.classList.contains("is-home")) return;
-    var total = countDone(S.pages), nu = nextUndone();
-    var hr = new Date().getHours();
-    document.getElementById("greet").textContent =
-      (hr < 12 ? "Good morning" : hr < 18 ? "Good afternoon" : "Good evening") + " · Claude Certified Architect – Foundations";
-    document.getElementById("headline").textContent = !total ? "Start with the whole picture." :
-      nu ? "Pick up where you left off." : "Every star is lit. Now prove it.";
-    var cta = document.getElementById("continue");
-    if (nu) {
-      var a = S.areas[nu.area] || {}, list = pagesIn(nu.area), left = list.length - countDone(list);
-      cta.href = nu.href; cta.style.setProperty("--a", a.color);
-      document.getElementById("rTag").innerHTML = "<i></i>" + a.name + (nu.num ? " · Card " + nu.num : "");
-      document.getElementById("rTitle").textContent = nu.short;
-      document.getElementById("rMeta").textContent = nu.min + " min · " +
-        (left === 1 ? "last page in this area" : left + " pages left in " + a.name);
-    } else {
-      cta.href = "quiz.html#mock";
-      document.getElementById("rTag").innerHTML = "<i></i>Practice";
-      document.getElementById("rTitle").textContent = "Take a timed mock exam";
-      document.getElementById("rMeta").textContent = "60 questions · 120 minutes · score per area";
-    }
-    var td = load("cca-days", {})[day()] || {};
-    function goal(nid, bid, n, of) {
-      document.getElementById(nid).textContent = n;
-      var li = document.getElementById(nid).parentNode; li.classList.toggle("met", n >= of);
-      if (bid) document.getElementById(bid).style.width = Math.min(100, n / of * 100) + "%";
-    }
-    goal("gCards", "gCardsBar", td.c || 0, 3);
-    goal("gQs", "gQsBar", td.q || 0, 10);
-    document.getElementById("gDue").textContent = dueList(S.cardIds || []).length;
-    document.getElementById("gStreak").textContent = streak();
-    document.getElementById("litN").textContent = total;
-
+    var total = countDone(S.pages);
+    document.getElementById("totalTxt").textContent = total;
+    setTimeout(function () { setRing(document.querySelector(".ring.big"), total / S.pages.length); }, 60);
+    document.querySelectorAll(".ring.small").forEach(function (r) {
+      var list = pagesIn(r.dataset.area);
+      setTimeout(function () { setRing(r, countDone(list) / list.length); }, 60);
+    });
+    var nu = nextUndone();
     document.querySelectorAll("[data-id]").forEach(function (el) {
       if (el === body) return;
       el.classList.toggle("is-done", !!done[el.dataset.id]);
-      el.classList.toggle("next-up", !!nu && el.dataset.id === nu.id);
-      if (nu && el.dataset.id === nu.id) { var rm = el.querySelector(".rm"); if (rm) rm.textContent = "next"; }
+      el.classList.toggle("next-up", !!nu && el.dataset.id === nu.id && el.classList.contains("chip") && !el.classList.contains("overview"));
+      var ck = el.querySelector(".ck.big"); if (ck) ck.classList.toggle("on", !!done[el.dataset.id]);
     });
-    document.querySelectorAll("details.area").forEach(function (d) {
-      var list = pagesIn(d.dataset.area), n = countDone(list);
-      d.querySelector(".ap").textContent = n + "/" + list.length;
-      d.querySelector(".abar i").style.width = (n / list.length * 100) + "%";
-      if (nu && nu.area === d.dataset.area) d.open = true;
-    });
-    if (location.hash && location.hash.indexOf("#area-") === 0) {
-      var t = document.querySelector(location.hash); if (t) t.open = true;
+    var cta = document.getElementById("continue");
+    var last = load("cca-last", null);
+    if (cta && total > 0 && nu) {
+      cta.href = nu.href;
+      cta.textContent = "▶ Continue: " + (nu.num ? nu.num + " " : "") + nu.short;
+    } else if (cta && !nu) {
+      cta.href = "flashcards.html"; cta.textContent = "🏆 All done. Drill the flashcards";
+    } else if (cta && last && total === 0) {
+      var lp = S.pages.filter(function (p) { return p.id === last; })[0];
+      if (lp) { cta.href = lp.href; cta.textContent = "▶ Back to: " + lp.short; }
     }
     var rs = document.querySelector(".reset");
     if (rs) rs.onclick = function () {
-      if (!rs.dataset.armed) { rs.dataset.armed = 1; rs.textContent = "Tap again to erase all progress"; return; }
-      done = {}; save("cca-done", done); ["cca-days", "cca-srs", "cca-qstats", "cca-mocks"].forEach(function (k) { save(k, k === "cca-mocks" ? [] : {}); });
-      delete rs.dataset.armed; rs.textContent = "Reset progress"; renderHome();
-      window.dispatchEvent(new Event("cca-progress")); toast("Progress reset");
+      if (!rs.dataset.armed) { rs.dataset.armed = 1; rs.textContent = "Tap again to really reset"; return; }
+      done = {}; save("cca-done", done); delete rs.dataset.armed; rs.textContent = "Reset progress"; renderHome();
+      toast("Progress reset");
     };
   }
 
   // ---------- flashcards ----------
   function initFlash() {
     if (!body.classList.contains("is-flash") || !window.CARDS) return;
-    var all = window.CARDS, deck = [], start = 0, flipped = false, area = "all", mode = "due";
-    var card = document.querySelector(".fcard"), empty = document.querySelector(".empty"), btns = document.querySelector(".fbtns");
+    var all = window.CARDS, deck = [], start = 0, flipped = false, area = "all", type = "all";
+    var card = document.querySelector(".fcard"), empty = document.querySelector(".empty");
+    var btns = document.querySelector(".fbtns");
     function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
     function build() {
-      var pool = all.filter(function (c) { return area === "all" || c.area === area; });
-      if (mode === "due") {
-        var due = dueList(pool.map(function (c) { return c.id; }));
-        pool = pool.filter(function (c) { return due.indexOf(c.id) >= 0; });
-      }
-      deck = shuffle(pool); start = deck.length;
-      document.getElementById("dueN").textContent = "(" + dueList(all.map(function (c) { return c.id; })).length + ")";
-      show();
+      deck = shuffle(all.filter(function (c) {
+        return (area === "all" || c.area === area) && (type === "all" || c.type === type);
+      }));
+      start = deck.length; show();
     }
     function show() {
       var left = deck.length;
-      document.querySelector(".left").textContent = left + " left";
+      document.querySelector(".left").textContent = left + " left of " + start;
       document.querySelector(".deckprog i").style.width = (start ? (start - left) / start * 100 : 0) + "%";
       empty.hidden = left > 0; card.hidden = !left; btns.style.visibility = left ? "visible" : "hidden";
-      if (!left) return;
+      if (!left) { if (start) confettiCenter(); return; }
       var c = deck[0], a = S.areas[c.area] || {};
-      card.style.setProperty("--ca", a.color || "#ebe6dc");
+      card.style.setProperty("--ca", a.color || "#fb923c");
       card.classList.remove("flipped", "out-l", "out-r"); flipped = false;
-      var lab = (a.name || "") + " · " + c.from;
-      card.querySelectorAll(".from").forEach(function (f) { f.textContent = lab; });
+      var label = (a.emoji || "") + " " + (a.name || "") + " · " + c.from;
+      card.querySelectorAll(".from").forEach(function (f) { f.textContent = label; });
       card.querySelector(".q").innerHTML = c.q;
       card.querySelector(".a").innerHTML = c.a;
       card.querySelector(".src").href = c.href;
     }
+    function confettiCenter() { if (typeof confetti === "function") { doneBtn = null; confetti(); } }
     function flip() { if (!deck.length) return; flipped = !flipped; card.classList.toggle("flipped", flipped); }
-    function next(knew) {
+    function next(got) {
       if (!deck.length) return;
-      if (!flipped) { flip(); return; } // see the answer before judging yourself
-      grade(deck[0].id, knew);
-      card.classList.add(knew ? "out-r" : "out-l");
+      if (!flipped) { flip(); return; } // look at the answer before judging yourself
+      card.classList.add(got ? "out-r" : "out-l");
       setTimeout(function () {
         var c = deck.shift();
-        if (!knew) deck.splice(Math.min(deck.length, 3 + Math.floor(Math.random() * 3)), 0, c);
-        if (!deck.length) toast("Session done. These cards come back when they're due.");
+        if (!got) deck.splice(Math.min(deck.length, 3 + Math.floor(Math.random() * 3)), 0, c);
         show();
-      }, 280);
+      }, 300);
     }
     card.addEventListener("click", function (e) { if (!e.target.closest("a")) flip(); });
     document.querySelector(".got").onclick = function () { next(true); };
     document.querySelector(".again").onclick = function () { next(false); };
-    document.getElementById("restart").onclick = function () {
-      mode = "all"; document.querySelectorAll(".mchip").forEach(function (x) { x.classList.toggle("on", x.dataset.mode === "all"); }); build();
-    };
+    document.getElementById("restart").onclick = build;
     document.querySelectorAll(".fchip").forEach(function (b) {
       b.onclick = function () {
         document.querySelectorAll(".fchip").forEach(function (x) { x.classList.remove("on"); });
@@ -284,7 +259,7 @@
     document.querySelectorAll(".mchip").forEach(function (b) {
       b.onclick = function () {
         document.querySelectorAll(".mchip").forEach(function (x) { x.classList.remove("on"); });
-        b.classList.add("on"); mode = b.dataset.mode; build();
+        b.classList.add("on"); type = b.dataset.type; build();
       };
     });
     addEventListener("keydown", function (e) {

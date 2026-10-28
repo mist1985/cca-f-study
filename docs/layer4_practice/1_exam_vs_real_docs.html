@@ -1,26 +1,25 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#121418">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23131519%22/><path d=%22M16 6l2.6 6.4 6.9.5-5.3 4.4 1.7 6.7L16 20.3 10.1 24l1.7-6.7-5.3-4.4 6.9-.5z%22 fill=%22%23e3b55e%22/></svg>">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
 <title>⚠️ Exam answer vs current product docs · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/site.css?v=1793187131">
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=1793187919">
 </head>
-<body data-id="layer4_practice/1_exam_vs_real_docs.md" data-area="L4" style="--a:#e07a5f" data-prev="../layer3_details/D5_over_time/5.6_sources_and_conflicts.html" data-next="2_practice_questions.html">
+<body data-id="layer4_practice/1_exam_vs_real_docs.md" data-area="L4" style="--a:#fb7185" data-prev="../layer3_details/D5_over_time/5.6_sources_and_conflicts.html" data-next="2_practice_questions.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="back" href="../index.html" title="Map (m)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>Map</a><a class="areatag" href="../index.html#area-L4"><i></i>Practice</a><div class="dots" aria-label="Pages in this area"></div><a class="terms" href="../glossary.html" title="Glossary (g)">Terms</a><button class="timer" data-min="3" title="Focus timer (t)"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="9" r="5.5"/><path d="M8 6v3l2 1.5M6.5 2h3"/></svg><span>3:00</span></button></header><main class="page kind-practice"><p class="kind"><span>Practice</span><span>·</span><span>Practice</span><span>·</span><span>3 min</span></p><h1>⚠️ Exam answer vs current product docs</h1>
+<header class="top"><a class="homebtn" href="../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../index.html#area-L4">🧪 <span>Practice</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-practice"><div class="kind">practice</div><h1>⚠️ Exam answer vs current product docs</h1>
 <p class="crumb">📍 <strong>Map:</strong> Layer 4 · Practice → <strong>Where the exam and today's docs disagree</strong>  ·  ⏱ 3 min</p>
 <p>The exam is written against the <strong>official exam guide (v1.0, July 2026)</strong>. Products change faster than exams.<br><strong>On exam day, always answer the way the guide does.</strong></p>
 <div class="tw"><table><thead><tr><th>Topic</th><th>✅ Exam answer</th><th>Today's product (don't use on the exam)</th></tr></thead><tbody><tr><td>Tool that starts helpers</td><td><strong>Task</strong> tool; <code>allowedTools</code> must include <code>&quot;Task&quot;</code></td><td>Renamed <strong>Agent</strong></td></tr><tr><td>Skill <code>allowed-tools</code></td><td><strong>Restricts</strong> tools during the skill</td><td>Only pre-approves; others still ask</td></tr><tr><td><code>tool_choice: &quot;any&quot;</code> / forced</td><td>Valid way to guarantee a tool call</td><td>Newest models return error 400</td></tr><tr><td>Edit fails (text not unique)</td><td><strong>Read + Write</strong></td><td>Add context or <code>replace_all</code></td></tr><tr><td>Few-shot count</td><td><strong>2–4</strong></td><td>Docs say 3–5</td></tr><tr><td>Team slash commands</td><td><code>.claude/commands/</code></td><td>Also <code>.claude/skills/</code> (both work)</td></tr><tr><td>Resume</td><td><code>--resume &lt;session-name&gt;</code>, <code>fork_session</code></td><td>Same idea, more flags</td></tr><tr><td>Check loaded memory files</td><td><code>/memory</code></td><td><code>/context</code> also shows them</td></tr></tbody></table></div>
 <h2>Out of scope (the guide says these WON'T be tested)</h2>
 <p>Fine-tuning · API keys/billing/auth · hosting MCP servers · model internals · embeddings/vector DBs · computer use · vision · streaming · rate limits &amp; pricing maths · prompt caching details · tokenization.</p>
-<p>👉 If your older HTML files go deep on these, <strong>skip them</strong>. Save the attention for what's tested.</p></main><nav class="bottom"><a class="nb prev" href="../layer3_details/D5_over_time/5.6_sources_and_conflicts.html" title="Previous (←)">← Prev</a><button class="nb done-btn" title="Mark done (d)"><span class="box"></span><span class="lbl">Mark done</span></button><a class="nb next" href="2_practice_questions.html" title="Next (→)">Next →</a></nav>
+<p>👉 If your older HTML files go deep on these, <strong>skip them</strong>. Save the attention for what's tested.</p></main><nav class="bottom"><a class="nb prev" href="../layer3_details/D5_over_time/5.6_sources_and_conflicts.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2_practice_questions.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="..";</script>
-<script src="../assets/data.js?v=1793187131"></script>
+<script src="../assets/data.js?v=1793187919"></script>
 
-<script src="../assets/site.js?v=1793187131"></script>
+<script src="../assets/site.js?v=1793187919"></script>
 </body></html>

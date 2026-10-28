@@ -1,7 +1,10 @@
+// Classic script (works from file:// too). Needs three.min.js loaded first.
 // The knowledge map on the home page: every page is a star, grouped by area,
 // lines are the "Connects to" links between cards. Finished pages are lit.
-import * as THREE from "three";
 
+(function () {
+"use strict";
+const THREE = window.THREE;
 const SITE = window.SITE || { pages: [], areas: {} };
 const wrap = document.getElementById("sky");
 const section = wrap && wrap.closest(".sky");
@@ -95,6 +98,7 @@ function start() {
     vertexColors: true,
   });
   const stars = new THREE.Points(geo, mat);
+  stars.renderOrder = 2;            // stars drawn over the lines
   world.add(stars);
 
   // ---------- lines: faint structure + "connects to" links ----------
@@ -246,6 +250,9 @@ function start() {
   requestAnimationFrame(frame);
 }
 
-if (wrap) {
+if (wrap && THREE) {
   try { start(); } catch (e) { console.error(e); section && section.classList.add("nogl"); }
 }
+
+else if (wrap) wrap.closest(".sky").classList.add("nogl");
+})();

@@ -1,17 +1,16 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#121418">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23131519%22/><path d=%22M16 6l2.6 6.4 6.9.5-5.3 4.4 1.7 6.7L16 20.3 10.1 24l1.7-6.7-5.3-4.4 6.9-.5z%22 fill=%22%23e3b55e%22/></svg>">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
 <title>Glossary · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./assets/site.css?v=1793187131">
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/site.css?v=1793187919">
 </head>
-<body data-id="glossary" data-area="L1" style="--a:#d9d3c7" >
+<body data-id="glossary" data-area="L1" style="--a:#fb923c" >
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="back" href="./index.html" title="Map (m)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>Map</a><div class="dots" aria-label="Pages in this area"></div><a class="terms" href="./glossary.html" title="Glossary (g)">Terms</a></header><main class="page"><h1>📖 Glossary</h1>
+<header class="top"><a class="homebtn" href="./index.html" title="Map (m)">🗺️</a><a class="homebtn" href="./glossary.html" title="Glossary (g)">📖</a><div class="dots" aria-label="Pages in this area"></div></header><main class="page"><h1>📖 Glossary</h1>
 <p class="crumb">📍 <strong>Reference page.</strong> Look a word up, then go back. No need to learn this page.</p>
 <h2>Core</h2>
 <ul><li><strong>Claude API</strong>: how a program sends messages to Claude and gets replies.</li><li><strong>Message</strong>: one turn. <code>role: &quot;user&quot;</code> = your side, <code>role: &quot;assistant&quot;</code> = Claude.</li><li><strong>System prompt</strong>: standing instructions sent before the conversation.</li><li><strong>Prompt</strong>: any instruction text you give Claude.</li><li><strong>Token</strong>: a small piece of text, about ¾ of a word. Size and cost are measured in tokens.</li><li><strong>Context window</strong>: everything Claude can see at once. Large but limited.</li><li><strong>JSON</strong>: a text format for structured data: <code>{&quot;field&quot;: &quot;value&quot;}</code>.</li><li><strong>JSON schema</strong>: an exact description of a JSON shape: fields, types, which are required.</li><li><strong>Deterministic</strong>: always gives the same result (code). <strong>Probabilistic</strong>: usually does (instructions to Claude).</li></ul>
@@ -27,7 +26,7 @@
 <ul><li><strong>Progressive summarization</strong>: repeatedly summarizing old conversation. Loses exact details.</li><li><strong>Case facts block</strong>: exact facts kept outside the summary, sent every time.</li><li><strong>Lost in the middle</strong>: long inputs: start and end are used best, the middle worst.</li><li><strong>Escalation triggers</strong>: customer asks for a human · policy gap · no progress.</li><li><strong>Sentiment</strong>: the customer's mood. Not a reliable escalation trigger.</li><li><strong>Self-reported confidence</strong>: Claude's own guess of how sure it is. Poorly calibrated.</li><li><strong>Calibration</strong>: checking confidence scores against labeled data so 90% really means 90%.</li><li><strong>Labeled validation set</strong>: examples with known correct answers, used to measure accuracy.</li><li><strong>Stratified sampling</strong>: checking random samples from every group (including high-confidence ones).</li><li><strong>Access failure vs valid empty result</strong>: "couldn't look" vs "looked, found nothing".</li><li><strong>Coverage annotation</strong>: a note in a report saying which parts are well supported and where the gaps are.</li><li><strong>Scratchpad file</strong>: a file where an agent writes findings to keep them across long sessions.</li><li><strong>Manifest</strong>: a saved state file used to resume after a crash.</li><li><strong>Provenance</strong>: where each fact came from. <strong>Claim-source mapping</strong>: claim + URL/document + excerpt + date.</li></ul></main>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT=".";</script>
-<script src="./assets/data.js?v=1793187131"></script>
+<script src="./assets/data.js?v=1793187919"></script>
 
-<script src="./assets/site.js?v=1793187131"></script>
+<script src="./assets/site.js?v=1793187919"></script>
 </body></html>

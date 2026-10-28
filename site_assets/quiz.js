@@ -27,7 +27,7 @@
       qs.forEach(function (q) { var s = stats[q.id]; if (s) { seen++; if (s.last) right++; } });
       totSeen += seen; totRight += right;
       var p = pct(right, seen), ar = A[a] || {};
-      html += '<div class="sbar" style="--a:' + ar.color + '"><div class="sl">' + ar.name +
+      html += '<div class="sbar" style="--a:' + ar.color + '"><div class="sl">' + ar.emoji + " " + ar.name +
         '<small>' + seen + "/" + qs.length + ' tried</small></div><div class="st"><i style="width:' + p +
         '%"></i><b class="goal"></b></div><div class="sp ' + (seen ? (p >= 90 ? "ok" : p >= 72 ? "mid" : "low") : "") + '">' +
         (seen ? p + "%" : "–") + "</div></div>";
@@ -38,7 +38,7 @@
     var best = mocks.reduce(function (b, m) { return Math.max(b, m.pct); }, 0);
     $("#mockBest").textContent = mocks.length ? "Mocks taken: " + mocks.length + " · best: " + best + "% · last: " + mocks[mocks.length - 1].pct + "%" : "";
     var miss = Q.filter(function (q) { return stats[q.id] && !stats[q.id].last; }).length;
-    $("#startMistakes").textContent = miss ? "Review " + miss + " mistake" + (miss > 1 ? "s" : "") : "No mistakes yet";
+    $("#startMistakes").textContent = miss ? "Review " + miss + " mistake" + (miss > 1 ? "s" : "") : "No mistakes yet 🎉";
     $("#startMistakes").disabled = !miss;
   }
 
@@ -77,7 +77,7 @@
     card.style.setProperty("--a", ar.color);
     $(".qprog i").style.width = pct(S.i + 1, S.list.length) + "%";
     $(".qcount").textContent = (S.i + 1) + " / " + S.list.length;
-    $(".qmeta").innerHTML = '<span class="qpill">' + ar.name + " · " + q.task + "</span>" +
+    $(".qmeta").innerHTML = '<span class="qpill">' + ar.emoji + " " + ar.name + " · " + q.task + "</span>" +
       '<span class="qscen">' + q.scenario + "</span>";
     $(".qstem").innerHTML = q.stem.replace(/\s*\(Choose \d\)\s*$/i, "");
     $(".qhint").textContent = q.multi ? "Choose " + nOk : "Choose 1";
@@ -89,7 +89,7 @@
       var b = document.createElement("button");
       b.className = "qopt" + (sel.indexOf(k) >= 0 ? " sel" : "");
       b.innerHTML = '<span class="ql">' + "ABCDE"[pos] + "</span><span class=\"qt\">" + o.t + "</span>" +
-        (checked ? '<span class="qwhy">' + o.why + "</span>" : "");
+        (checked ? '<span class="qwhy">' + (o.ok ? "✅ " : (sel.indexOf(k) >= 0 ? "❌ " : "")) + o.why + "</span>" : "");
       if (checked) b.classList.add(o.ok ? "right" : (sel.indexOf(k) >= 0 ? "wrong" : "dim"));
       b.disabled = checked;
       b.onclick = function () { pick(q, k, nOk); };
@@ -100,7 +100,7 @@
       var ok = isRight(q, sel);
       fb.hidden = false;
       fb.className = "qfeedback " + (ok ? "ok" : "bad");
-      fb.innerHTML = (ok ? "Correct." : "Not quite. Read why each option is right or wrong.") +
+      fb.innerHTML = (ok ? "✅ Correct!" : "❌ Not quite.") +
         (q.href ? ' <a href="' + q.href + '">Review card ' + q.task + " →</a>" : "");
     } else fb.hidden = true;
     var main = $("#qMain");
@@ -128,7 +128,6 @@
   function record(q, ok) {
     var s = stats[q.id] || { seen: 0, right: 0 };
     s.seen++; if (ok) s.right++; s.last = ok; stats[q.id] = s; save("cca-qstats", stats);
-    if (window.CCA_LOG) window.CCA_LOG("q");
   }
 
   function main() {
@@ -183,10 +182,10 @@
       var ap = {}; AREAS.forEach(function (a) { ap[a] = pct(per[a].r, per[a].n); });
       mocks.push({ date: new Date().toISOString().slice(0, 10), pct: p, areas: ap }); save("cca-mocks", mocks);
     }
-    var verdict = p >= 90 ? "Exam-ready level. Confirm it with another mock."
-      : p >= 80 ? "Close. Review the mistakes, then the weakest area's cards."
-      : p >= 72 ? "Around the pass line. Not safe yet. Aim for 90%."
-      : "Keep going. Re-read the overview of your weakest area first.";
+    var verdict = p >= 90 ? "🏆 Exam-ready level. Do it again with new questions to confirm."
+      : p >= 80 ? "💪 Close. Review the mistakes, then the weakest area's cards."
+      : p >= 72 ? "📈 Around the pass line. Not safe yet. Target 90%."
+      : "🧭 Keep going. Re-read the Layer 2 page of your weakest area first.";
     var h = '<div class="res-top"><div class="res-pct ' + (p >= 90 ? "ok" : p >= 72 ? "mid" : "low") + '">' + p + "%</div>" +
       "<div><h1>" + (S.mode === "mock" ? "Mock exam result" : "Practice result") + "</h1><p>" + right + " of " + total +
       " correct</p><p>" + verdict + "</p></div></div>";
@@ -194,7 +193,7 @@
     AREAS.forEach(function (a) {
       if (!per[a].n) return;
       var ar = A[a] || {}, ap = pct(per[a].r, per[a].n);
-      h += '<div class="sbar" style="--a:' + ar.color + '"><div class="sl">' + ar.name + "<small>" +
+      h += '<div class="sbar" style="--a:' + ar.color + '"><div class="sl">' + ar.emoji + " " + ar.name + "<small>" +
         per[a].r + "/" + per[a].n + '</small></div><div class="st"><i style="width:' + ap + '%"></i><b class="goal"></b></div>' +
         '<div class="sp ' + (ap >= 90 ? "ok" : ap >= 72 ? "mid" : "low") + '">' + ap + "%</div></div>";
     });
@@ -203,11 +202,11 @@
       h += "<h2>Review your mistakes</h2>";
       wrong.forEach(function (q) {
         var ar = areaOf(q), sel = S.answers[q.id] || [];
-        h += '<details class="rev" style="--a:' + ar.color + '"><summary>' + q.task + " · " +
+        h += '<details class="rev" style="--a:' + ar.color + '"><summary>' + ar.emoji + " " + q.task + " · " +
           q.stem.replace(/<[^>]+>/g, "").slice(0, 90) + "…</summary><div class=\"ans\"><p>" + q.stem + "</p><ul class=\"revopts\">";
         q.opts.forEach(function (o, k) {
           var mine = sel.indexOf(k) >= 0;
-          h += '<li class="' + (o.ok ? "right" : mine ? "wrong" : "") + '">' + (o.ok ? "✓ " : mine ? "✗ " : "· ") +
+          h += '<li class="' + (o.ok ? "right" : mine ? "wrong" : "") + '">' + (o.ok ? "✅ " : mine ? "❌ " : "▫️ ") +
             o.t + '<br><small>' + o.why + "</small></li>";
         });
         h += "</ul>" + (q.href ? '<a href="' + q.href + '">Review card ' + q.task + " →</a>" : "") + "</div></details>";
