@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>3.6 · Claude Code in CI/CD · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D3_claude_code/3.6_ci_cd.md" data-area="D3" style="--a:#4ade80" data-prev="3.5_refining.html" data-next="../D4_reliable_answers/4.1_exact_rules.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.6</span> Claude Code in CI/CD</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 3. Claude Code → <strong>3.6 CI/CD</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">On a server nobody watches: <strong><code>-p</code></strong> (non-interactive) + <strong><code>--output-format json --json-schema</code></strong> (machine-readable).</blockquote>
+<h2>Picture it</h2>
+<p>Claude reviews every pull request at 3 a.m. Nobody is there to answer questions. The result must be readable by another program.</p>
+<h2>Know these 🎯</h2>
+<ul><li><code>claude -p &quot;...&quot;</code> (or <code>--print</code>) → run once, print, <strong>exit</strong>. Without it the job <strong>hangs waiting for input</strong>.</li><li><code>--output-format json</code> + <code>--json-schema</code> → structured findings → post as <strong>inline PR comments</strong>.</li><li><strong>CLAUDE.md gives context to CI runs</strong>: testing standards, fixtures, review criteria.</li><li><strong>Independent review</strong>: the session that wrote the code is worse at reviewing it.</li><li>Re-review after new commits → include the <strong>previous findings</strong> and report <strong>only new or still-open</strong> issues (no duplicate comments).</li><li>Generating tests → give it the <strong>existing tests</strong> so it doesn't suggest duplicates.</li></ul>
+<h2>⚠️ Exam traps (this is sample question #10)</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td><code>CLAUDE_HEADLESS=true</code></td><td>Doesn't exist</td></tr><tr><td><code>--batch</code> flag</td><td>Doesn't exist</td></tr><tr><td><code>&lt; /dev/null</code></td><td>Unix workaround, not the answer</td></tr><tr><td>✅</td><td><code>claude -p &quot;...&quot;</code></td></tr></tbody></table></div>
+<details class="bonus"><summary>🔬 Bonus (beyond the official guide)</summary><div class="ans">
+<p><code>--bare</code> = skip auto-loaded config, needs <code>ANTHROPIC_API_KEY</code>. Schema data lands in <code>structured_output</code>. <code>--permission-mode dontAsk</code> denies anything not pre-approved.</p>
+</div></details>
+<details class="quiz"><summary>🧠 Say it out loud: the CI job hangs forever. Fix?</summary><div class="ans">
+<p>Add <code>-p</code>.</p>
+</div></details>
+<p class="nextline">🎉 <strong>Area 3 done.</strong> Back to <a href="../../layer2_areas/3_claude_code.html"><code>layer2_areas/3_claude_code.md</code></a> for a check.<br>➡️ Next: <a href="../D4_reliable_answers/4.1_exact_rules.html"><code>../D4_reliable_answers/4.1_exact_rules.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="3.5_refining.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="../D4_reliable_answers/4.1_exact_rules.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

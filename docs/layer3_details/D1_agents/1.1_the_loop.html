@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>1.1 · The loop · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D1_agents/1.1_the_loop.md" data-area="D1" style="--a:#a78bfa" data-prev="../../layer2_areas/5_over_time.html" data-next="1.2_lead_and_helpers.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.1</span> The loop</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 1. Agents → <strong>1.1 The loop</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">Keep looping <strong>while</strong> <code>stop_reason == &quot;tool_use&quot;</code>. Stop when it's <code>&quot;end_turn&quot;</code>.</blockquote>
+<h2>Picture it</h2>
+<p>Claude is a consultant you can only reach by letter. It writes: <em>"Please look up order 123."</em> You look it up and write back. Repeat until Claude says it's finished.</p>
+<h2>Know these 🎯</h2>
+<ul><li>Each round: send request → read <code>stop_reason</code> → run the tool → <strong>add the result to the conversation</strong> → send again.</li><li>Claude decides which tool comes next (<strong>model-driven</strong>). Not a fixed decision tree in your code.</li><li><code>tool_result</code> goes back in a <strong>user</strong> message, with the same id as the <code>tool_use</code>.</li></ul>
+<h2>⚠️ The 3 wrong ways to stop (the exam names these)</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Read Claude's words ("I'm done!")</td><td>Check <code>stop_reason</code></td></tr><tr><td>A fixed step cap as the main stop</td><td>A cap is only a safety net</td></tr><tr><td>"Claude wrote text, so it's finished"</td><td>Text can come <em>with</em> a tool call. Check <code>stop_reason</code></td></tr></tbody></table></div>
+<details class="bonus"><summary>🔬 Bonus (beyond the official guide, low priority)</summary><div class="ans">
+<p><code>max_tokens</code> = cut off · <code>refusal</code> = HTTP 200, not an error · <code>pause_turn</code> = Anthropic's server tools need another round, so send the reply back as-is.</p>
+</div></details>
+<details class="quiz"><summary>🧠 Say it out loud: how does the loop know Claude is finished?</summary><div class="ans">
+<p><code>stop_reason</code> is <code>&quot;end_turn&quot;</code>. Not its words, not a step count, not the presence of text.</p>
+</div></details>
+<p class="nextline">➡️ Next: <a href="1.2_lead_and_helpers.html"><code>1.2_lead_and_helpers.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="../../layer2_areas/5_over_time.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="1.2_lead_and_helpers.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>🤖 Layer 2 · Area 1: Agents (27%, the biggest) · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-id="layer2_areas/1_agents.md" data-area="D1" style="--a:#a78bfa" data-prev="../layer1_THE_WHOLE_PICTURE.html" data-next="2_tools.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../index.html" title="Map (m)">🗺️</a><a class="pill" href="../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="5" title="Focus timer (t)">⏱ <span>5:00</span></button></header><main class="page kind-overview"><div class="kind">overview</div><h1>🤖 Layer 2 · Area 1: Agents (27%, the biggest)</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → <strong>1. Agents</strong> = <em>the worker, and how workers form a team</em></p>
+<hr>
+<h2>In one sentence</h2>
+<blockquote class="rule">An agent is Claude working <strong>in a loop</strong>. A team is a <strong>lead</strong> passing work to <strong>helpers</strong>. Rules that must hold live in <strong>guards (hooks)</strong>.</blockquote>
+<h2>The 3 things to understand</h2>
+<pre><code> THE LOOP          THE HUB              THE GATE
+ Claude asks  →    Lead Claude          Hook = code that
+ for a tool,       splits the job,      runs before/after
+ your code runs    helpers do pieces,   every tool and can
+ it, repeat        lead combines        BLOCK it</code></pre>
+<h2>The 7 pieces (each one = a Layer 3 card)</h2>
+<div class="tw"><table><thead><tr><th>#</th><th>Piece</th><th>One line</th></tr></thead><tbody><tr><td>1.1</td><td>The loop</td><td>Keep going while Claude says "tool_use". Stop on "end_turn".</td></tr><tr><td>1.2</td><td>Lead + helpers</td><td>Hub and spoke. Everything goes through the lead.</td></tr><tr><td>1.3</td><td>Briefing helpers</td><td>Started with the <strong>Task</strong> tool. Blank memory, so tell them everything.</td></tr><tr><td>1.4</td><td>Unbreakable rules + handover</td><td>Locks in code. Humans get a short summary.</td></tr><tr><td>1.5</td><td>Hooks</td><td>Before = block. After = clean up.</td></tr><tr><td>1.6</td><td>Splitting a job</td><td>Known steps → fixed chain. Unknown → adaptive agent.</td></tr><tr><td>1.7</td><td>Sessions</td><td><code>--resume</code> a named session, <code>fork_session</code> to compare. Stale → start fresh.</td></tr></tbody></table></div>
+<h2>The trap in this area</h2>
+<p class="vs">❌ "Write the rule in Claude's instructions."<br>✅ "Add a hook that blocks the action."</p>
+<hr>
+<p class="nextline">➡️ Details: <a href="../layer3_details/D1_agents/1.1_the_loop.html"><code>layer3_details/D1_agents/</code></a>  ·  Next area: <a href="2_tools.html"><code>2_tools.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="../layer1_THE_WHOLE_PICTURE.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2_tools.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="..";</script>
+<script src="../assets/data.js"></script>
+
+<script src="../assets/site.js"></script>
+</body></html>

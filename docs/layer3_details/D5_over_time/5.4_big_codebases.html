@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>5.4 · Context in big codebases · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D5_over_time/5.4_big_codebases.md" data-area="D5" style="--a:#f472b6" data-prev="5.3_honest_failures.html" data-next="5.5_human_checks.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D5">⏳ <span>Over time</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">5.4</span> Context in big codebases</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 5. Over time → <strong>5.4 Big codebases</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">Keep the main context <strong>clean</strong>: send noisy work to helpers, and <strong>write findings to files</strong>.</blockquote>
+<h2>Picture it</h2>
+<p>A long session fills up. Claude starts talking about "typical patterns" instead of the specific classes it found an hour ago.</p>
+<h2>Know these 🎯</h2>
+<ul><li>Symptom of context degradation: <strong>vague, generic, inconsistent answers</strong>.</li><li><strong>Helpers for specific questions</strong> ("find all test files", "trace the refund flow") → main agent keeps the big picture.</li><li><strong>Scratchpad files</strong>: write key findings to disk and refer back to them later.</li><li>Between phases: <strong>summarize</strong> phase 1, then <strong>inject that summary</strong> when starting phase 2.</li><li><strong>Crash recovery:</strong> each agent saves its state to a <strong>manifest file</strong>. The lead <strong>loads it on resume</strong>.</li><li><strong><code>/compact</code></strong> when verbose exploration fills the context.</li></ul>
+<h2>⚠️ Exam traps</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Main agent reads everything itself</td><td>Helpers for specific questions</td></tr><tr><td>Rely on memory of what was found</td><td>Scratchpad file</td></tr><tr><td>Restart from zero after a crash</td><td>Manifest, reload on resume</td></tr></tbody></table></div>
+<details class="bonus"><summary>🔬 Bonus (beyond the official guide)</summary><div class="ans">
+<p><code>/clear</code> = wipe (only between unrelated tasks). <code>/compact</code> = summarize and continue. Path-scoped rules reload only when a matching file is touched again.</p>
+</div></details>
+<details class="quiz"><summary>🧠 Say it out loud: how does a crashed multi-agent job continue?</summary><div class="ans">
+<p>Each agent wrote its state to a manifest. The lead loads it and injects it into the prompts.</p>
+</div></details>
+<p class="nextline">➡️ Next: <a href="5.5_human_checks.html"><code>5.5_human_checks.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="5.3_honest_failures.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="5.5_human_checks.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

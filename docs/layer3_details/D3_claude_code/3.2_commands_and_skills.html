@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>3.2 · Slash commands &amp; skills · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D3_claude_code/3.2_commands_and_skills.md" data-area="D3" style="--a:#4ade80" data-prev="3.1_claude_md.html" data-next="3.3_path_rules.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.2</span> Slash commands &amp; skills</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 3. Claude Code → <strong>3.2 Commands &amp; skills</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule"><strong>Always true → CLAUDE.md</strong> (always loaded). <strong>Specific task → skill or command</strong> (loaded on demand).</blockquote>
+<h2>Picture it</h2>
+<p>A 40-step release process isn't pinned to the desk every day. It's a binder on the shelf, opened when you type <code>/release</code>.</p>
+<h2>Know these 🎯</h2>
+<div class="tw"><table><thead><tr><th>Where</th><th>Who gets it</th></tr></thead><tbody><tr><td><code>.claude/commands/</code></td><td>✅ team (in git)</td></tr><tr><td><code>~/.claude/commands/</code></td><td>❌ only you</td></tr><tr><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td>✅ team</td></tr><tr><td><code>~/.claude/skills/</code></td><td>❌ only you. Personal variant? <strong>Use a different name</strong></td></tr></tbody></table></div>
+<p>SKILL.md frontmatter (settings at the top):</p>
+<ul><li><code>context: fork</code> → runs in an <strong>isolated helper</strong>. Verbose output (codebase analysis, brainstorming) <strong>doesn't pollute</strong> your main chat.</li><li><code>allowed-tools</code> → <strong>limits tools</strong> while the skill runs (exam example: only file-write tools, to prevent destructive actions).</li><li><code>argument-hint</code> → reminds the developer which argument to type.</li></ul>
+<h2>⚠️ Exam traps (this is sample question #4)</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Team <code>/review</code> in <code>~/.claude/commands/</code></td><td><code>.claude/commands/</code> in the repo</td></tr><tr><td><code>/review</code> defined inside CLAUDE.md</td><td>CLAUDE.md is for context, not commands</td></tr><tr><td><code>.claude/config.json</code> commands array</td><td>Doesn't exist</td></tr><tr><td>300-line runbook in CLAUDE.md</td><td>Make it a skill</td></tr></tbody></table></div>
+<details class="bonus"><summary>⚠️ Real-world vs exam</summary><div class="ans">
+<p>Current docs say <code>allowed-tools</code> only <em>pre-approves</em> tools and other tools still ask. <strong>The exam guide treats it as restricting tools.</strong> On the exam, go with the guide.</p>
+</div></details>
+<details class="quiz"><summary>🧠 Say it out loud: a skill dumps 500 lines of analysis into your chat. Fix?</summary><div class="ans">
+<p>Add <code>context: fork</code> so it runs in an isolated helper.</p>
+</div></details>
+<p class="nextline">➡️ Next: <a href="3.3_path_rules.html"><code>3.3_path_rules.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="3.1_claude_md.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="3.3_path_rules.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

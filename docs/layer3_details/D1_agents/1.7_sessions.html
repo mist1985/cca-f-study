@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>1.7 · Sessions: resume &amp; fork · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D1_agents/1.7_sessions.md" data-area="D1" style="--a:#a78bfa" data-prev="1.6_splitting_a_job.html" data-next="../D2_tools/2.1_descriptions.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.7</span> Sessions: resume &amp; fork</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 1. Agents → <strong>1.7 Sessions</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">A session saves the <strong>conversation</strong>, not the <strong>world</strong>. Old tool results can be stale.</blockquote>
+<h2>Picture it</h2>
+<p>A saved game that remembers the chat but not the files. If code changed overnight, Claude's memories are out of date.</p>
+<h2>Know these 🎯</h2>
+<ul><li><code>--resume &lt;session-name&gt;</code> = continue a <strong>named</strong> session.</li><li><code>fork_session</code> = branch from a shared starting point to <strong>compare two approaches</strong> (e.g. two testing strategies).</li><li>Pick the right option:<ul><li>Earlier context <strong>mostly still valid</strong> → <strong>resume</strong>.</li><li>Tool results are <strong>stale</strong> → <strong>start fresh with a structured summary</strong>. That's more reliable.</li></ul></li><li>After resuming: tell Claude <strong>which files changed</strong>, so it re-checks just those. Not a full re-exploration.</li></ul>
+<h2>⚠️ Exam traps</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Resume a week-old session after a big refactor</td><td>Fresh session + summary</td></tr><tr><td>Re-explore the whole codebase after resuming</td><td>Tell it the specific changed files</td></tr></tbody></table></div>
+<details class="bonus"><summary>🔬 Bonus (beyond the official guide)</summary><div class="ans">
+<p><code>--continue</code> = latest session. Forks don't undo file edits (checkpoints do).</p>
+</div></details>
+<details class="quiz"><summary>🧠 Say it out loud: when is a fresh start better than resume?</summary><div class="ans">
+<p>When the old tool results are stale (the files changed). Start fresh and pass in a structured summary.</p>
+</div></details>
+<p class="nextline">🎉 <strong>Area 1 done.</strong> Back to <a href="../../layer2_areas/1_agents.html"><code>layer2_areas/1_agents.md</code></a>. Does each of the 7 pieces click?<br>➡️ Next: <a href="../D2_tools/2.1_descriptions.html"><code>../D2_tools/2.1_descriptions.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="1.6_splitting_a_job.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="../D2_tools/2.1_descriptions.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

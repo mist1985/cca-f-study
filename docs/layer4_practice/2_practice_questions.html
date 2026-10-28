@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>🧪 Practice questions (exam style) · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-id="layer4_practice/2_practice_questions.md" data-area="L4" style="--a:#fb7185" data-prev="1_exam_vs_real_docs.html" data-next="3_road_to_90.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../index.html" title="Map (m)">🗺️</a><a class="pill" href="../index.html#area-L4">🧪 <span>Practice</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="2" title="Focus timer (t)">⏱ <span>2:00</span></button></header><main class="page kind-practice"><div class="kind">practice</div><h1>🧪 Practice questions (exam style)</h1>
+<p class="crumb">📍 <strong>Map:</strong> Layer 4 · Practice  ·  ⏱ ~2 min per question, like the real exam</p>
+<p>Written in the style of the official guide, not copied from it. Each answer points back to its card, so you can see where it fits on the map.<br><strong>Method:</strong> answer out loud → open → if wrong, re-read that card (3 min) → move on.</p>
+<hr>
+<p><strong>Q1 · Customer support.</strong> The agent sometimes refunds over $500 without approval. The system prompt already forbids it. Best fix?<br>A) Repeat the rule in capital letters at the top of the prompt<br>B) A hook that blocks refunds above $500 and sends the case to human escalation<br>C) Few-shot examples of refusing large refunds<br>D) Lower the temperature</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. A rule that must hold every time goes in code. → card 1.5</div></details>
+<hr>
+<p><strong>Q2 · Customer support.</strong> A customer writes: "I want to talk to a real person." The issue looks easy to solve. What should the agent do?<br>A) Solve it quickly first, then offer a human<br>B) Escalate to a human immediately<br>C) Ask why they want a human<br>D) Check sentiment, and escalate only if it's negative</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. An explicit request means escalate immediately, with no investigating first. → card 5.2</div></details>
+<hr>
+<p><strong>Q3 · Customer support.</strong> <code>get_customer</code> returns 3 customers named "Ana Petrova". What next?<br>A) Pick the one with the most recent order<br>B) Pick the one with the most activity<br>C) Ask the customer for another identifier, like email or order number<br>D) Escalate to a human</p>
+<details class="answer"><summary>Answer</summary><div class="ans">C. Never guess. Ask for more identifiers. → card 5.2</div></details>
+<hr>
+<p><strong>Q4 · Multi-agent research.</strong> The synthesis subagent writes reports without key facts that the web-search subagent found. What's most likely wrong?<br>A) The synthesis agent needs a bigger context window<br>B) The coordinator isn't putting the search results into the synthesis agent's prompt<br>C) Subagents should share memory<br>D) The search agent should send results to synthesis directly</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. Subagents only know what's in their prompt. → card 1.3</div></details>
+<hr>
+<p><strong>Q5 · Multi-agent research.</strong> Three subagents run one after another, and it's slow. They don't depend on each other. Fix?<br>A) Have the coordinator emit 3 Task calls in one response<br>B) Use a faster model<br>C) Merge all three into one subagent<br>D) Use the Batch API</p>
+<details class="answer"><summary>Answer</summary><div class="ans">A. Several Task calls in one reply run in parallel. → card 1.3</div></details>
+<hr>
+<p><strong>Q6 · Multi-agent research.</strong> Source A says the market is $2.1B (2023). Source B says $2.8B (2025). How should the report handle this?<br>A) Use B, because it's newer<br>B) Average them<br>C) Include both with source and date, noted as different<br>D) Leave the number out</p>
+<details class="answer"><summary>Answer</summary><div class="ans">C. Attribute both and keep the dates. The years may explain the gap. → card 5.6</div></details>
+<hr>
+<p><strong>Q7 · Claude Code.</strong> A developer wants their own version of the team's <code>/review</code> skill without affecting teammates. Where?<br>A) Edit <code>.claude/skills/review/</code> in the repo<br>B) <code>~/.claude/skills/</code> with a <strong>different name</strong><br>C) In their CLAUDE.md<br>D) In <code>.mcp.json</code></p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. Personal variant: user scope, different name. → card 3.2</div></details>
+<hr>
+<p><strong>Q8 · Claude Code.</strong> Terraform files need special conventions, and they only live under <code>terraform/</code>. Most maintainable?<br>A) A <code>.claude/rules/</code> file with <code>paths: [&quot;terraform/**/*&quot;]</code><br>B) A section in root CLAUDE.md<br>C) A skill the developer runs each time<br>D) Paste the conventions into every prompt</p>
+<details class="answer"><summary>Answer</summary><div class="ans">A. A path-scoped rule loads automatically when matching files are edited. → card 3.3</div></details>
+<hr>
+<p><strong>Q9 · CI/CD.</strong> After a developer pushes fixes, the re-review posts the same 12 comments again. Fix?<br>A) Turn off re-reviews<br>B) Include the earlier findings and ask Claude to report only new or still-unresolved issues<br>C) Use a larger model<br>D) Delete the old comments before every run</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. → card 3.6</div></details>
+<hr>
+<p><strong>Q10 · CI/CD.</strong> The test generator keeps suggesting tests that already exist. Best two fixes? <em>(choose 2)</em><br>A) Give it the existing test files in context<br>B) Document testing standards and the available fixtures in CLAUDE.md<br>C) Raise the temperature<br>D) Run it through the Batch API<br>E) Tell it "don't duplicate tests"</p>
+<details class="answer"><summary>Answer</summary><div class="ans">A and B. E is vague, and Claude can't avoid duplicates it can't see. → card 3.6</div></details>
+<hr>
+<p><strong>Q11 · Data extraction.</strong> Some invoices have no PO number, and the model invents one. Best schema fix?<br>A) Make <code>po_number</code> required<br>B) Make <code>po_number</code> nullable / optional<br>C) Retry until it's found<br>D) Add "do not invent" to the prompt</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. Required fields push Claude to make values up. → card 4.3</div></details>
+<hr>
+<p><strong>Q12 · Data extraction.</strong> Extracted line items don't add up to the stated total. The JSON is valid. Best design?<br>A) Trust it, because the schema passed<br>B) Extract <code>calculated_total</code> and <code>stated_total</code>, flag <code>conflict_detected</code>, and retry with the specific error when it's an extraction mistake<br>C) Switch to few-shot instead of a schema<br>D) Drop the total field</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. A schema means shape, not truth. Validate the meaning yourself. → cards 4.3 + 4.4</div></details>
+<hr>
+<p><strong>Q13 · Data extraction.</strong> You must return results within 30 hours, and batch processing can take up to 24 hours. How often do you submit batches?<br>A) Once a day<br>B) Every 4 hours<br>C) Every 12 hours<br>D) Batching can't meet any SLA</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. Up to 4 h waiting + 24 h processing = 28 h ≤ 30 h. → card 4.5</div></details>
+<hr>
+<p><strong>Q14 · Data extraction.</strong> Accuracy is 97% overall. Leadership wants to remove human review. First step?<br>A) Remove it, since 97% is great<br>B) Measure accuracy by document type and field on a labeled set<br>C) Keep review only for low-confidence items<br>D) Ask the model how confident it is overall</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. → card 5.5</div></details>
+<hr>
+<p><strong>Q15 · Developer productivity.</strong> The agent uses built-in Grep instead of your more capable MCP code-search tool. Fix?<br>A) Remove Grep<br>B) Improve the MCP tool's description: its capabilities and outputs<br>C) Force the MCP tool with <code>tool_choice</code><br>D) Add "prefer MCP" to CLAUDE.md</p>
+<details class="answer"><summary>Answer</summary><div class="ans">B. Fix the cause: the description. → card 2.4</div></details>
+<hr>
+<p><strong>Q16 · Developer productivity.</strong> A long codebase exploration starts giving vague "typical pattern" answers. Best two? <em>(choose 2)</em><br>A) Keep a scratchpad file of key findings and refer back to it<br>B) Give specific questions to subagents (e.g. "trace the refund flow")<br>C) Start over and re-read every file<br>D) Switch to a model with a bigger window</p>
+<details class="answer"><summary>Answer</summary><div class="ans">A and B. → card 5.4</div></details>
+<hr>
+<h3>Score yourself</h3>
+<p>14–16 ✅ ready for this layer · 11–13 re-read the cards you missed · ≤10 go back to Layer 2 first.</p></main><nav class="bottom"><a class="nb prev" href="1_exam_vs_real_docs.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="3_road_to_90.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="..";</script>
+<script src="../assets/data.js"></script>
+
+<script src="../assets/site.js"></script>
+</body></html>

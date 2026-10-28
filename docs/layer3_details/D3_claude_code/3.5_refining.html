@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>3.5 · Iterative refinement · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D3_claude_code/3.5_refining.md" data-area="D3" style="--a:#4ade80" data-prev="3.4_plan_mode.html" data-next="3.6_ci_cd.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.5</span> Iterative refinement</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 3. Claude Code → <strong>3.5 Refining</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">Give Claude <strong>something concrete to check against</strong>: examples or tests. Not a vague description.</blockquote>
+<h2>Picture it</h2>
+<p>"Make the discount work." "Done!" Is it? A test that passes is proof. Words aren't.</p>
+<h2>Know these 🎯</h2>
+<ul><li>Prose gets misread? → give <strong>2–3 concrete input → output examples</strong>.</li><li><strong>Test-driven:</strong> write tests first (behavior, edge cases, performance) → share the <strong>failures</strong> → iterate.</li><li><strong>Interview pattern:</strong> in an unfamiliar area (cache invalidation, failure modes), Claude <strong>asks you questions first</strong>, then builds.</li><li>Edge case broken (e.g. null values in a migration script) → give <strong>that specific test case</strong> with input + expected output.</li><li><strong>Problems that affect each other → one detailed message.</strong> Independent problems → fix <strong>one by one</strong>.</li></ul>
+<h2>⚠️ Exam traps</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Re-explain in longer prose</td><td>2–3 input/output examples</td></tr><tr><td>Fix 3 interacting bugs one by one</td><td>All in one message</td></tr><tr><td>Fix 3 unrelated bugs in one message</td><td>One by one</td></tr></tbody></table></div>
+<details class="quiz"><summary>🧠 Say it out loud: when do you send all issues together?</summary><div class="ans">
+<p>When the fixes interact. Independent issues get fixed one by one.</p>
+</div></details>
+<p class="nextline">➡️ Next: <a href="3.6_ci_cd.html"><code>3.6_ci_cd.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="3.4_plan_mode.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="3.6_ci_cd.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>

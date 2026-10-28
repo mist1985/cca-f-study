@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>2.4 · MCP for a team · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body data-id="layer3_details/D2_tools/2.4_mcp_for_a_team.md" data-area="D2" style="--a:#22d3ee" data-prev="2.3_who_gets_which_tools.html" data-next="2.5_built_in_tools.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.4</span> MCP for a team</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.4 MCP for a team</strong>  ·  ⏱ 3 min</p>
+<h2>The one rule</h2>
+<blockquote class="rule">Team-shared servers → <strong>project <code>.mcp.json</code></strong> with secrets as <strong><code>${VARIABLES}</code></strong>.</blockquote>
+<h2>Picture it</h2>
+<p>MCP = USB for AI. Plug in a "server" (GitHub, Jira, a database) and Claude gets its tools. Question: where do you save the plug settings so the whole team gets them, without leaking passwords?</p>
+<h2>Know these 🎯</h2>
+<div class="tw"><table><thead><tr><th>Where</th><th>Who gets it</th><th>Use for</th></tr></thead><tbody><tr><td><code>.mcp.json</code> (project, in git)</td><td>whole team</td><td>shared tooling</td></tr><tr><td><code>~/.claude.json</code> (user)</td><td>only you</td><td>personal / experiments</td></tr></tbody></table></div>
+<ul><li><code>${GITHUB_TOKEN}</code> in <code>.mcp.json</code> → each person's own token fills it in. No secret in git.</li><li>Tools from <strong>all</strong> configured servers are found at connection time and are <strong>all available at once</strong>.</li><li><strong>Resources</strong> = read-only catalogs (issue lists, docs, database schemas). They show Claude what exists, <strong>without</strong> exploratory tool calls.</li><li>Claude uses built-in Grep instead of your better MCP tool? → <strong>Improve the MCP tool's description.</strong></li><li>Standard system (Jira, GitHub)? → use an <strong>existing community server</strong>. Build custom servers only for team-specific workflows.</li></ul>
+<h2>⚠️ Exam traps</h2>
+<div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Real token written in <code>.mcp.json</code></td><td><code>${GITHUB_TOKEN}</code></td></tr><tr><td>Team server in your user config</td><td>Project <code>.mcp.json</code></td></tr><tr><td>Build your own Jira server</td><td>Use the community one</td></tr><tr><td>Many tool calls to discover the DB schema</td><td>Expose it as an MCP <strong>resource</strong></td></tr></tbody></table></div>
+<details class="quiz"><summary>🧠 Say it out loud: how does the team share a server without sharing a password?</summary><div class="ans">
+<p>Commit <code>.mcp.json</code> with <code>${TOKEN}</code> placeholders. Each person sets their own environment variable.</p>
+</div></details>
+<p class="nextline">➡️ Next: <a href="2.5_built_in_tools.html"><code>2.5_built_in_tools.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="2.3_who_gets_which_tools.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2.5_built_in_tools.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="../..";</script>
+<script src="../../assets/data.js"></script>
+
+<script src="../../assets/site.js"></script>
+</body></html>
