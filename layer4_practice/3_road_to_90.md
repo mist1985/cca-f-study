@@ -10,17 +10,18 @@ The pass mark is 720/1000 (scaled). The score report shows **% correct per area*
 ## The plan (short blocks, ADHD-friendly)
 | Step | What | Done when |
 |---|---|---|
-| 1 | Layer 1 | You can say the one idea + 5 areas without looking |
+| 1 | Layer 1: big picture + how it works | You can explain the loop and the 5 areas without looking |
 | 2 | Layer 2, all 5 | You can name every piece in each area |
 | 3 | Layer 3, 1 card per sitting | You get each card's 🧠 question right out loud |
-| 4 | `1_exam_vs_real_docs.md` | You know the 8 "exam answer" differences |
-| 5 | `2_practice_questions.md` | 14+/16 |
-| 6 | The 12 sample questions in the **official exam guide** | 12/12, and you can say why each wrong option is wrong |
-| 7 | 2 timed mock exams (60 Q / 120 min) | **≥ 90% in every area**, twice |
-| 8 | Day before: Layer 1 + the ⚠️ trap tables only | — |
+| 4 | 🎯 Quiz → **Practice** that area right after its cards | ≥ 80% in that area |
+| 5 | `1_exam_vs_real_docs.md` | You know the 8 "exam answer" differences |
+| 6 | `4_build_it_yourself.md` (4 exercises) | You can explain every "Watch for" line |
+| 7 | 🎯 Quiz → **My mistakes** until it's empty | 0 mistakes left |
+| 8 | ⏱️ **Mock exam** (60 Q / 120 min), then review every mistake | **≥ 90% in every area**, on 2 mocks in a row |
+| 9 | Day before: Layer 1 + the ⚠️ trap tables + 🃏 flashcards | — |
 
-## Why step 6 matters most
-The guide's sample questions show **exactly how the exam thinks**. The most common pattern:
+## Why the mock exam matters most
+The real exam tests **judgment under time pressure**. The mock trains exactly that. The most common pattern:
 > 3 options sound reasonable. 1 fixes the **root cause** in the **simplest structural** way.
 
 ## Exam-day method (2 min per question)

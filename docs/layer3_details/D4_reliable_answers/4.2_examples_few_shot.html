@@ -6,11 +6,11 @@
 <title>4.2 · Few-shot examples · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D4_reliable_answers/4.2_examples_few_shot.md" data-area="D4" style="--a:#fbbf24" data-prev="4.1_exact_rules.html" data-next="4.3_forced_format.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.2</span> Few-shot examples</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.2</span> Few-shot examples</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 4. Answers → <strong>4.2 Few-shot</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">Instructions alone give inconsistent output? → <strong>Show 2–4 targeted examples.</strong></blockquote>
@@ -18,6 +18,27 @@
 <p>Explaining a form in words is hard. Handing someone 3 filled-in forms, one tricky and one with a missing value, works instantly.</p>
 <h2>Know these 🎯</h2>
 <ul><li>Few-shot = <strong>the most effective way</strong> to get consistent format when instructions alone fail.</li><li>Best for <strong>ambiguous cases</strong>: show <em>why</em> one choice beat the other plausible ones.</li><li>Helps Claude <strong>generalize</strong> to new patterns, not just copy.</li><li>Show the exact output format (location, issue, severity, suggested fix).</li><li>Show <strong>acceptable code vs a real issue</strong> → fewer false positives.</li><li>Extraction: show different document layouts (inline citations vs bibliography). Show <strong>missing info → null</strong> → less made-up data.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>&lt;examples&gt;
+  &lt;example&gt;
+    &lt;input&gt;Lead time: ships in ~2 wks&lt;/input&gt;
+    &lt;output&gt;{&quot;lead_time_days&quot;: 14}&lt;/output&gt;
+  &lt;/example&gt;
+  &lt;example&gt;
+    &lt;input&gt;Delivery: 3-5 business days&lt;/input&gt;
+    &lt;output&gt;{&quot;lead_time_days&quot;: 5}&lt;/output&gt;
+    &lt;why&gt;Range given: use the upper bound, so the promise is safe.&lt;/why&gt;
+  &lt;/example&gt;
+  &lt;example&gt;
+    &lt;input&gt;Contact sales for availability.&lt;/input&gt;
+    &lt;output&gt;{&quot;lead_time_days&quot;: null}&lt;/output&gt;
+    &lt;why&gt;Not stated. null, never a guess.&lt;/why&gt;
+  &lt;/example&gt;
+&lt;/examples&gt;</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>3 <strong>different</strong> formats → Claude learns the rule, not one pattern.</li><li><code>&lt;why&gt;</code> shows the <strong>reasoning</strong> for an ambiguous case.</li><li>The <code>null</code> example teaches "don't invent".</li></ul>
+<h2>🧩 Connects to</h2>
+<p>4.1 (criteria) · 4.3 (schemas guarantee the shape) · 5.2 (few-shot for escalation decisions)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>More detailed prose</td><td>2–4 examples</td></tr><tr><td>3 near-identical examples</td><td>Diverse, including edge cases</td></tr><tr><td>Few-shot to <em>guarantee</em> valid JSON</td><td>Examples nudge. Schemas guarantee (4.3)</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: how many examples, and of what?</summary><div class="ans">
@@ -26,7 +47,7 @@
 <p class="nextline">➡️ Next: <a href="4.3_forced_format.html"><code>4.3_forced_format.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="4.1_exact_rules.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="4.3_forced_format.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

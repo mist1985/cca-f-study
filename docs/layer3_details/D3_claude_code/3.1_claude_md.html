@@ -6,11 +6,11 @@
 <title>3.1 · CLAUDE.md: the note on Claude&#x27;s desk · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D3_claude_code/3.1_claude_md.md" data-area="D3" style="--a:#4ade80" data-prev="../D2_tools/2.5_built_in_tools.html" data-next="3.2_commands_and_skills.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.1</span> CLAUDE.md: the note on Claude's desk</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.1</span> CLAUDE.md: the note on Claude's desk</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 3. Claude Code → <strong>3.1 CLAUDE.md</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">Team rules go in the <strong>project</strong> CLAUDE.md (in git). Your personal file is <strong>never shared</strong>.</blockquote>
@@ -19,6 +19,22 @@
 <h2>Know these 🎯</h2>
 <div class="tw"><table><thead><tr><th>Level</th><th>Path</th><th>Shared?</th></tr></thead><tbody><tr><td>User</td><td><code>~/.claude/CLAUDE.md</code></td><td>❌ only you</td></tr><tr><td>Project</td><td><code>CLAUDE.md</code> or <code>.claude/CLAUDE.md</code></td><td>✅ via git</td></tr><tr><td>Directory</td><td><code>subfolder/CLAUDE.md</code></td><td>✅ for that folder</td></tr></tbody></table></div>
 <ul><li>New teammate isn't getting the rules? → They're in someone's <strong>user</strong> file. Move them to the <strong>project</strong> file.</li><li><code>@import</code> pulls other files in (e.g. each package imports only the standards it needs).</li><li>Huge CLAUDE.md → split into <code>.claude/rules/</code> (<code>testing.md</code>, <code>api-conventions.md</code>, <code>deployment.md</code>).</li><li><strong><code>/memory</code></strong> → check which memory files are loaded.</li><li>CLAUDE.md is a <strong>note</strong>, not a lock.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>~/.claude/CLAUDE.md                 ← only you: &quot;I like short answers&quot;
+my-repo/CLAUDE.md                   ← team: &quot;Python 3.12. Run tests with make test.&quot;
+my-repo/packages/billing/CLAUDE.md  ← that folder: &quot;Money is always integer cents.&quot;</code></pre>
+<p>Modular CLAUDE.md with imports:</p>
+<pre class="wrap"><code># packages/billing/CLAUDE.md
+@../../docs/standards/money.md
+@../../docs/standards/api-errors.md</code></pre>
+<p>Splitting a big file:</p>
+<pre class="wrap"><code>.claude/rules/testing.md
+.claude/rules/api-conventions.md
+.claude/rules/deployment.md</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>The project file is <strong>in git</strong>, so every teammate gets it.</li><li><code>@path</code> imports pull in only the standards that package needs.</li><li><code>/memory</code> → see which of these files are actually loaded.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>3.3 (rules with <code>paths:</code>) · 3.2 (skills = on demand) · 3.6 (CI reads CLAUDE.md too)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Team rules in <code>~/.claude/CLAUDE.md</code></td><td>Project CLAUDE.md</td></tr><tr><td>Block secrets with a CLAUDE.md line</td><td>Permission deny rule or hook</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: a new developer's Claude ignores the team style. Why?</summary><div class="ans">
@@ -27,7 +43,7 @@
 <p class="nextline">➡️ Next: <a href="3.2_commands_and_skills.html"><code>3.2_commands_and_skills.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="../D2_tools/2.5_built_in_tools.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="3.2_commands_and_skills.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

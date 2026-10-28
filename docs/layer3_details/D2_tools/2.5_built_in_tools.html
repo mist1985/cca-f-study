@@ -6,11 +6,11 @@
 <title>2.5 · Built-in tools · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D2_tools/2.5_built_in_tools.md" data-area="D2" style="--a:#22d3ee" data-prev="2.4_mcp_for_a_team.html" data-next="../D3_claude_code/3.1_claude_md.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.5</span> Built-in tools</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.5</span> Built-in tools</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.5 Built-in tools</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>Grep = search INSIDE files. Glob = find files by NAME.</strong> Search first, then read only what matters.</blockquote>
@@ -18,6 +18,19 @@
 <div class="tw"><table><thead><tr><th>Tool</th><th>Job</th><th>Example</th></tr></thead><tbody><tr><td><strong>Grep</strong></td><td>search file <strong>contents</strong></td><td>who calls <code>parseInvoice</code>? where's this error message?</td></tr><tr><td><strong>Glob</strong></td><td>match file <strong>paths</strong></td><td><code>**/*.test.tsx</code></td></tr><tr><td><strong>Read</strong></td><td>load a whole file</td><td></td></tr><tr><td><strong>Write</strong></td><td>write a whole file</td><td></td></tr><tr><td><strong>Edit</strong></td><td>change one <strong>unique</strong> piece of text</td><td></td></tr><tr><td><strong>Bash</strong></td><td>run commands</td><td></td></tr></tbody></table></div>
 <h2>Know these 🎯</h2>
 <ul><li><strong>Edit fails because the text isn't unique → Read + Write</strong> (fallback in the official guide).</li><li>Explore step by step: <strong>Grep finds the entry point → Read follows the imports.</strong> Don't read every file up front.</li><li>Wrapper modules: first list all <strong>exported names</strong>, then Grep for each name.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>Glob  &quot;**/*.test.tsx&quot;              → every test file (by NAME)
+Grep  &quot;processRefund\(&quot;            → every file that CALLS it (by CONTENT)
+Read  src/billing/refund.ts        → read the entry point, follow its imports
+Edit  old: &quot;retries = 3&quot;  new: &quot;retries = 5&quot;   → only if that text is unique
+      ↳ not unique? → Read the whole file, Write the corrected version</code></pre>
+<p>Tracing through a wrapper module:</p>
+<pre class="wrap"><code>1. Read  src/api/index.ts  → it re-exports: createOrder, refundOrder, getStatus
+2. Grep  each of those names across the codebase</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Start <strong>narrow</strong> (Grep/Glob), read <strong>only</strong> what matters, then follow the trail.</li><li>Edit needs a <strong>unique anchor</strong>. Read + Write is the reliable fallback.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>5.4 (keep exploration from flooding context) · 3.4 (Explore subagent)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Glob to find who calls a function</td><td>Grep</td></tr><tr><td>Grep to find all test files</td><td>Glob</td></tr><tr><td>Read the whole repo first</td><td>Search first, read selectively</td></tr></tbody></table></div>
 <details class="bonus"><summary>🔬 Real-world note</summary><div class="ans">
@@ -29,7 +42,7 @@
 <p class="nextline">🎉 <strong>Area 2 done.</strong> Back to <a href="../../layer2_areas/2_tools.html"><code>layer2_areas/2_tools.md</code></a> for a check.<br>➡️ Next: <a href="../D3_claude_code/3.1_claude_md.html"><code>../D3_claude_code/3.1_claude_md.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="2.4_mcp_for_a_team.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="../D3_claude_code/3.1_claude_md.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

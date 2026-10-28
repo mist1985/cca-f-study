@@ -6,7 +6,8 @@ You go from the **whole picture** to the **details**, one layer at a time.
 Layer 1  →  1 page. The whole exam.               (read first, 5 min)
 Layer 2  →  5 pages. One per area.                (~5 min each)
 Layer 3  →  30 small cards. One per exam topic.   (~3 min each)
-Layer 4  →  practice + the plan to 90%.
+Layer 4  →  practice: questions, mock exam, hands-on, the plan to 90%.
+📖 Glossary · 🎯 Quiz (148 questions + 60-question mock) · 🃏 Flashcards
 ```
 
 **Rules**

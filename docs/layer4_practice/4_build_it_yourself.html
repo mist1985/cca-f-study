@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>🛠️ Build it yourself (the 4 official exercises) · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=1793185828">
+</head>
+<body data-id="layer4_practice/4_build_it_yourself.md" data-area="L4" style="--a:#fb7185" data-prev="3_road_to_90.html" data-next="">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../index.html#area-L4">🧪 <span>Practice</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="1" title="Focus timer (t)">⏱ <span>1:00</span></button></header><main class="page kind-practice"><div class="kind">practice</div><h1>🛠️ Build it yourself (the 4 official exercises)</h1>
+<p class="crumb">📍 <strong>Map:</strong> Layer 4 · Practice → <strong>Hands-on</strong>  ·  ⏱ ~1 hour each</p>
+<p>The exam assumes you've <strong>built</strong> these things. You don't need to code: open <strong>Claude Code</strong> in an empty folder, paste the prompt, then ask it to explain each part. One exercise per sitting.</p>
+<p>What you need: Claude Code, plus an Anthropic API key from console.anthropic.com for exercises 1, 3 and 4 (costs a few cents).</p>
+<hr>
+<h2>Exercise 1 · Support agent with escalation</h2>
+<p><strong>Covers:</strong> 1.1 · 1.4 · 1.5 · 2.1 · 2.2 · 5.2</p>
+<pre class="wrap"><code>Build a small Python support agent (Claude Agent SDK or the plain API) for a beginner.
+- 4 fake tools: get_customer, lookup_order, process_refund, escalate_to_human.
+  Write detailed descriptions; make get_customer and lookup_order easy to confuse
+  unless the descriptions are good.
+- An agentic loop that continues on stop_reason &quot;tool_use&quot; and stops on &quot;end_turn&quot;.
+- Structured errors: errorCategory (transient/validation/business/permission),
+  isRetryable, a readable message. Make lookup_order time out 1 in 3 times.
+- A hook/gate: block lookup_order and process_refund until get_customer verified the ID.
+- A hook that blocks refunds over $500 and redirects to escalate_to_human.
+- Test message: &quot;Hi, I&#x27;m ana@x.com. Order 4821 never arrived AND I was charged twice.&quot;
+Print every step in plain English, then explain the code piece by piece.</code></pre>
+<p><strong>Watch for:</strong> the loop stops only on <code>end_turn</code> · the gate blocks no matter what Claude "wants" · the timeout is retried, the $500 refund is escalated · both concerns get handled in one combined answer.</p>
+<hr>
+<h2>Exercise 2 · Claude Code for a team</h2>
+<p><strong>Covers:</strong> 2.4 · 3.1 · 3.2 · 3.3 · 3.4</p>
+<pre class="wrap"><code>Set up this empty folder like a team project and explain each file to me as a beginner:
+1. CLAUDE.md with 3 coding standards and how to run tests.
+2. .claude/rules/api.md with paths: [&quot;src/api/**/*&quot;] and .claude/rules/tests.md
+   with paths: [&quot;**/*.test.*&quot;].
+3. .claude/commands/review.md: a team /review command.
+4. .claude/skills/map/SKILL.md with context: fork, allowed-tools: Read, Grep, Glob,
+   argument-hint: [folder].
+5. .mcp.json with one server using ${GITHUB_TOKEN}, and show where a personal server
+   would go (~/.claude.json).
+Then show me /memory, and create a test file so I can see the test rule load.</code></pre>
+<p><strong>Watch for:</strong> which files are shared (in the folder) vs personal (<code>~</code>) · the test rule only appears when a test file is touched · the forked skill returns only a summary.<br><strong>Then try:</strong> a one-line fix (direct) vs "restructure this into 3 modules" (plan mode). Notice when the plan helps.</p>
+<hr>
+<h2>Exercise 3 · Data extraction pipeline</h2>
+<p><strong>Covers:</strong> 4.2 · 4.3 · 4.4 · 4.5 · 5.5</p>
+<pre class="wrap"><code>Build a Python script for a beginner that extracts invoice data:
+- An extraction tool with a JSON schema: vendor (required), stated_total (required),
+  po_number (nullable), category enum with &quot;other&quot; + category_detail and &quot;unclear&quot;,
+  line_items, calculated_total, conflict_detected.
+- Force that tool with tool_choice.
+- 5 fake invoices as text: one without a PO number, one whose lines don&#x27;t add up,
+  one with an odd layout.
+- Validate in code (lines sum to total). On failure retry max 2x, sending the document,
+  the failed extraction and the exact error. Never retry for a missing PO number: keep null.
+- Add field-level confidence and send low-confidence fields to a &quot;human review&quot; list.
+- Show how the same 5 requests would be sent with the Message Batches API using custom_id.
+Explain each part piece by piece.</code></pre>
+<p><strong>Watch for:</strong> the JSON is always valid but the totals can still be wrong · retry fixes format slips, not missing data · <code>custom_id</code> matches results.</p>
+<hr>
+<h2>Exercise 4 · Multi-agent research</h2>
+<p><strong>Covers:</strong> 1.2 · 1.3 · 5.3 · 5.6</p>
+<pre class="wrap"><code>Build a beginner-friendly multi-agent research demo with the Claude Agent SDK:
+- A coordinator with allowedTools including &quot;Task&quot;, and 2 subagents: web_search, synthesis.
+- The coordinator passes search findings INTO the synthesis prompt
+  (claim, excerpt, source, date for each finding).
+- Run 2 searches in parallel (several Task calls in one coordinator response).
+- Simulate a timeout in one search: return structured error context
+  (failure_type, attempted, partial_results, alternatives).
+- Feed two sources with different numbers and dates; the report must show both,
+  attributed, and a coverage section listing gaps.
+Explain the flow step by step.</code></pre>
+<p><strong>Watch for:</strong> synthesis knows only what the coordinator gave it · the failure becomes a noted gap, not a crash or a fake "nothing found" · the conflicting numbers stay visible with dates.</p>
+<hr>
+<p>✅ <strong>Done when</strong> you've run all 4 and can explain each "Watch for" line in your own words.</p></main><nav class="bottom"><a class="nb prev" href="3_road_to_90.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next off" href="#" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT="..";</script>
+<script src="../assets/data.js?v=1793185828"></script>
+
+<script src="../assets/site.js?v=1793185828"></script>
+</body></html>

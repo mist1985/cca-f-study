@@ -6,11 +6,11 @@
 <title>2.1 · Tool descriptions · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D2_tools/2.1_descriptions.md" data-area="D2" style="--a:#22d3ee" data-prev="../D1_agents/1.7_sessions.html" data-next="2.2_errors.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.1</span> Tool descriptions</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.1</span> Tool descriptions</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.1 Descriptions</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">The description is <strong>how Claude chooses a tool</strong>. A bad description means a bad choice.</blockquote>
@@ -18,6 +18,16 @@
 <p>A new employee in front of buttons labelled "Retrieves customer information" and "Retrieves order details". Which one for <em>"check my order #12345"</em>? They guess.</p>
 <h2>Know these 🎯</h2>
 <ul><li>A good description has: <strong>what it does, input formats, example queries, edge cases, when to use it vs similar tools.</strong></li><li>Overlapping tools (<code>analyze_content</code> vs <code>analyze_document</code>) get mixed up. Fixes:<ul><li><strong>Rename + re-describe</strong> (<code>analyze_content</code> → <code>extract_web_results</code>).</li><li><strong>Split</strong> a generic tool into specific ones (<code>extract_data_points</code>, <code>summarize_content</code>, <code>verify_claim_against_source</code>).</li></ul></li><li>The <strong>system prompt</strong> can steer tool choice by accident. Check it for keyword-sensitive instructions.</li></ul>
+<h2>👀 What it looks like</h2>
+<p>❌ Minimal (Claude guesses):</p>
+<pre class="wrap"><code>{&quot;name&quot;: &quot;get_customer&quot;, &quot;description&quot;: &quot;Retrieves customer information&quot;}</code></pre>
+<p>✅ Clear (Claude knows):</p>
+<pre class="wrap"><code>{&quot;name&quot;: &quot;get_customer&quot;,
+ &quot;description&quot;: &quot;Finds a customer by email, phone or customer ID (C-12345) and returns verified identity + account status. Use this FIRST to verify who you are talking to. Do NOT use it for order questions (\&quot;where is order #12345\&quot;); use lookup_order. Returns up to 5 matches; if more than one matches, ask the customer for another identifier.&quot;}</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li><strong>What</strong> it does + <strong>input formats</strong> (email, phone, C-12345).</li><li><strong>When</strong> to use it (first, for identity) and <strong>when not</strong> (orders → <code>lookup_order</code>).</li><li><strong>Edge case</strong> (several matches → ask for another identifier).</li></ul>
+<h2>🧩 Connects to</h2>
+<p>2.3 (fewer, distinct tools help too) · 2.4 (MCP tool descriptions vs built-in Grep) · 5.2 (multiple matches)</p>
 <h2>⚠️ Exam traps (this is sample question #2)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right ("first step")</th></tr></thead><tbody><tr><td>Few-shot examples of routing</td><td>Expand the descriptions</td></tr><tr><td>A keyword routing layer</td><td>Over-engineered</td></tr><tr><td>Merge both into one tool</td><td>Valid, but too much work for a <em>first</em> step</td></tr><tr><td>Force it with <code>tool_choice</code></td><td>Fix the description</td></tr></tbody></table></div>
 <details class="bonus"><summary>🔬 Bonus (beyond the official guide)</summary><div class="ans">
@@ -29,7 +39,7 @@
 <p class="nextline">➡️ Next: <a href="2.2_errors.html"><code>2.2_errors.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="../D1_agents/1.7_sessions.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2.2_errors.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

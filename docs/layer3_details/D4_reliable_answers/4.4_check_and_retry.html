@@ -6,11 +6,11 @@
 <title>4.4 · Check + retry · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D4_reliable_answers/4.4_check_and_retry.md" data-area="D4" style="--a:#fbbf24" data-prev="4.3_forced_format.html" data-next="4.5_batch_api.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.4</span> Check + retry</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.4</span> Check + retry</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 4. Answers → <strong>4.4 Check + retry</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">Retry <strong>with the exact error</strong>. But if the info <strong>isn't in the document</strong>, retrying is useless.</blockquote>
@@ -18,6 +18,22 @@
 <p>The form is perfect, but the items add up to €940 and the total says €1,040. Your code catches it and asks again, saying exactly what's wrong.</p>
 <h2>Know these 🎯</h2>
 <ul><li>Two kinds of errors:<ul><li><strong>Syntax/schema</strong> (broken JSON) → removed by tool use (4.3).</li><li><strong>Semantic</strong> (doesn't add up, wrong field) → <strong>your validation code</strong> (e.g. Pydantic) + retry.</li></ul></li><li>A good retry sends: <strong>original document + failed extraction + the specific errors.</strong></li><li>Retry <strong>works</strong> for: format mismatches, structural mistakes.</li><li>Retry <strong>fails</strong> when: the info is <strong>absent</strong>, or only in <strong>another document not provided</strong>.</li><li>Self-check fields: extract <code>calculated_total</code> <strong>and</strong> <code>stated_total</code> + a <code>conflict_detected</code> flag.</li><li>Feedback loop: add a <strong><code>detected_pattern</code></strong> field to findings → see which patterns developers dismiss → fix those.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>for attempt in range(3):
+    data = extract(doc, feedback)
+    errors = validate(data)              # e.g. sum(line_items) != stated_total
+    if not errors:
+        break
+    feedback = (f&quot;&lt;document&gt;{doc}&lt;/document&gt;&quot;
+                f&quot;&lt;previous_extraction&gt;{data}&lt;/previous_extraction&gt;&quot;
+                f&quot;&lt;errors&gt;{errors}&lt;/errors&gt;&quot;
+                &quot;Fix only these errors. If a value is not in the document, use null.&quot;)</code></pre>
+<p>Self-checking schema fields:</p>
+<pre class="wrap"><code>{&quot;stated_total&quot;: 1040.00, &quot;calculated_total&quot;: 940.00, &quot;conflict_detected&quot;: true}</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>The retry carries <strong>document + failed output + exact errors</strong>. Not the same prompt again.</li><li>Bounded attempts. Absent info → <code>null</code>, not more pressure.</li><li><code>conflict_detected</code> flags a real mismatch <strong>in the source</strong> for a human, instead of hiding it.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>4.3 (schema = shape) · 5.5 (route conflicts to humans) · 4.1 (<code>detected_pattern</code> feedback loop)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Retry the same prompt unchanged</td><td>Add the specific errors</td></tr><tr><td>Retry until the tax ID appears</td><td>It's absent: null + flag</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: when will a retry NOT help?</summary><div class="ans">
@@ -26,7 +42,7 @@
 <p class="nextline">➡️ Next: <a href="4.5_batch_api.html"><code>4.5_batch_api.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="4.3_forced_format.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="4.5_batch_api.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

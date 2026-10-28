@@ -1,0 +1,190 @@
+@ D3 3.1 | Code generation
+A new developer joins, and their Claude Code ignores the team's coding standards. Everyone else's works fine. The standards were written by the tech lead months ago. Most likely cause?
++ The standards are in the tech lead's user-level ~/.claude/CLAUDE.md, which isn't shared via git :: User-level files apply only to that user.
+- The new developer's model is older :: The model version doesn't decide which files load.
+- CLAUDE.md files expire after 30 days :: They don't.
+- The project CLAUDE.md is too long :: That wouldn't affect one person only.
+---
+@ D3 3.1 | Code generation
+Where should coding standards go so every teammate gets them automatically?
++ The project-level CLAUDE.md (repo root or .claude/CLAUDE.md), committed to git :: Shared through version control.
+- ~/.claude/CLAUDE.md on each machine :: Personal only. Would need manual copying.
+- A Slack message pinned for the team :: Claude Code doesn't read Slack.
+- .mcp.json :: That's for MCP servers.
+---
+@ D3 3.1 | Code generation
+A monorepo's CLAUDE.md is 900 lines and mixes testing, API and deployment rules. What's the recommended cleanup?
++ Split it into topic files in .claude/rules/ (testing.md, api-conventions.md, deployment.md) :: Focused, maintainable files.
+- Delete it and rely on Claude's defaults :: Loses the team's standards.
+- Move it all into ~/.claude/CLAUDE.md :: Unshares it.
+- Convert the whole file into a single skill :: The always-needed standards would stop loading automatically.
+---
+@ D3 3.1 | Code generation
+Each package in a monorepo should include only the standards relevant to it, maintained in shared docs. What feature fits?
++ @import in each package's CLAUDE.md to pull in the relevant standards files :: Selective, modular inclusion.
+- Copy-paste the standards into each package :: Duplication that drifts out of date.
+- Put all standards in root CLAUDE.md :: Every package gets everything.
+- An MCP server for standards :: Overkill.
+---
+@ D3 3.1 | Code generation
+Claude behaves differently in two sessions, and you suspect a memory file isn't loading. Which command helps verify which memory files are loaded?
++ /memory :: It shows and opens the loaded memory files.
+- /compact :: That summarizes the conversation.
+- /resume :: Continues a session.
+- -p :: The non-interactive flag.
+---
+@ D3 3.2 | Code generation
+You want a /review command that every developer gets when they clone the repo. Where does it go?
++ .claude/commands/ in the repository :: Project-scoped commands are shared via version control.
+- ~/.claude/commands/ :: Personal only.
+- Inside CLAUDE.md :: CLAUDE.md is for instructions and context, not command definitions.
+- A .claude/config.json "commands" array :: Not a real mechanism.
+---
+@ D3 3.2 | Developer productivity
+A codebase-analysis skill dumps hundreds of lines of exploration into the main conversation, crowding out the actual task. Fix?
++ Add context: fork to the skill's frontmatter so it runs in an isolated subagent :: Only the result returns. The verbose output stays out of the main session.
+- Ask the skill to be shorter :: Doesn't isolate the exploration.
+- Move the skill into CLAUDE.md :: Makes it always loaded, which is worse.
+- Run /clear after every use :: Throws away the main task's context too.
+---
+@ D3 3.2 | Developer productivity
+A skill should only be able to write files, never run shell commands. Which frontmatter setting does the exam expect?
++ allowed-tools listing only the file-write tools :: The guide uses allowed-tools to restrict tool access during skill execution.
+- argument-hint :: That's for prompting parameters.
+- context: fork :: Isolates context. Doesn't limit tools.
+- description :: Explains the skill. Doesn't limit tools.
+---
+@ D3 3.2 | Developer productivity
+Developers often run /migrate with no argument, and it fails. What helps?
++ argument-hint in the frontmatter, e.g. argument-hint: [table-name] :: It prompts developers for the required parameter.
+- context: fork :: Unrelated to arguments.
+- allowed-tools :: Unrelated to arguments.
+- A longer CLAUDE.md :: Not where skill arguments are defined.
+---
+@ D3 3.2 | Developer productivity
+A developer wants a personal variant of the team's /deploy skill without changing it for teammates. Best approach?
++ Create a personal skill in ~/.claude/skills/ with a different name :: Personal customization that doesn't affect teammates.
+- Edit .claude/skills/deploy/ in the repo :: Changes it for everyone.
+- Delete the team skill locally :: Breaks the shared workflow and gets overwritten.
+- Add personal steps to the project CLAUDE.md :: That's shared too.
+---
+@ D3 3.2 | Code generation
+Which TWO belong in a skill rather than CLAUDE.md? (Choose 2)
++ A 40-step release procedure used once a month :: Task-specific, so load it on demand.
++ A database migration workflow run occasionally :: Task-specific workflow.
+- "We use Python 3.12 and pytest" :: A universal fact, always relevant, so CLAUDE.md.
+- "Never commit directly to main" :: A universal standard. CLAUDE.md (and enforce it with hooks or permissions if it's critical).
+- The project's folder structure overview :: Always useful context.
+---
+@ D3 3.3 | Code generation
+Test files live next to the components they test, spread across 60 folders. All tests must follow the same conventions. Most maintainable approach?
++ A .claude/rules/ file with paths: ["**/*.test.tsx"] :: Applies automatically to matching files, wherever they are.
+- A CLAUDE.md in each of the 60 folders :: Duplication, and CLAUDE.md files are bound to directories.
+- A /test-conventions skill developers must remember to run :: Not automatic.
+- One section in root CLAUDE.md, relying on Claude to infer when it applies :: Inference is less reliable than explicit path matching.
+---
+@ D3 3.3 | Developer productivity
+Terraform conventions should apply only when Claude edits infrastructure files under terraform/. What's the configuration?
++ A .claude/rules/terraform.md with paths: ["terraform/**/*"] in YAML frontmatter :: It loads only when matching files are edited.
+- Put the conventions in ~/.claude/CLAUDE.md :: Personal, and always loaded.
+- Add them to .mcp.json :: Wrong file.
+- An argument-hint :: Unrelated.
+---
+@ D3 3.3 | Code generation
+What is the main benefit of path-scoped rules?
++ They load only when editing matching files, which cuts irrelevant context and tokens :: Conditional loading.
+- They make rules impossible to break :: Rules are still instructions, not enforcement.
+- They run as code before every tool call :: That describes hooks.
+- They're shared with other repositories automatically :: No.
+---
+@ D3 3.4 | Code generation
+Which task should start in plan mode?
++ Migrating a logging library used in 45+ files, with several possible approaches :: Large scale, multiple valid approaches, many files.
+- Fixing a typo in an error message :: Simple and clear: direct execution.
+- Adding one null check where the stack trace points :: Well-scoped: direct execution.
+- Renaming one local variable :: Trivial.
+---
+@ D3 3.4 | Code generation
+A bug has a clear stack trace pointing to one line in one file, and the fix is obvious. Approach?
++ Direct execution :: Simple, well-scoped changes don't need a planning phase.
+- Plan mode with a full architecture review :: Overkill.
+- Spawn 5 subagents to investigate :: Overkill.
+- Ask the team for a design meeting :: Overkill.
+---
+@ D3 3.4 | Developer productivity
+During a multi-phase task, exploring the codebase produces so much output that the context fills up before implementation starts. What helps?
++ Use the Explore subagent for the verbose discovery phase, so only summaries return :: Isolating verbose discovery protects the main context.
+- Read even more files directly :: Makes it worse.
+- Switch off plan mode :: Doesn't reduce exploration output.
+- Raise max_tokens :: Output length isn't the issue. Context accumulation is.
+---
+@ D3 3.4 | Code generation
+You must split a monolith into microservices. Which combination does the guide recommend?
++ Plan mode to investigate and design, then direct execution to implement the approved plan :: Plan for the investigation, then execute.
+- Direct execution throughout, letting the boundaries emerge :: Risks costly rework.
+- Plan mode throughout, never implementing :: Nothing gets built.
+- Direct execution, switching to plan mode only if it gets hard :: The complexity is already known upfront.
+---
+@ D3 3.5 | Code generation
+Claude keeps misreading your prose description of how to transform address strings. Most effective fix?
++ Give 2–3 concrete input → output examples :: Concrete examples beat prose that gets read inconsistently.
+- Write a longer prose description :: Same ambiguity, more words.
+- Use plan mode :: Doesn't clarify the transformation.
+- Switch to a larger model :: Doesn't remove the ambiguity.
+---
+@ D3 3.5 | Code generation
+You're building a feature in a domain you don't know well (cache invalidation). What technique surfaces considerations you hadn't thought of?
++ The interview pattern: have Claude ask you questions before implementing :: It surfaces design considerations early.
+- Ask Claude to start coding immediately :: Problems show up late.
+- Give Claude only the function name :: Not enough context.
+- Disable tests to move faster :: Removes verification.
+---
+@ D3 3.5 | Code generation
+You found 3 bugs. Fixing the first changes how the second and third behave. How should you give the feedback?
++ All three in a single detailed message, because the fixes interact :: Interacting problems should be solved together.
+- One bug per message, in sequence :: That's for independent problems.
+- Only report the first and hope the others go away :: Unreliable.
+- Ask Claude to find them itself without details :: Wastes effort.
+---
+@ D3 3.5 | Code generation
+Which approach reflects test-driven iteration?
++ Write tests covering behavior, edge cases and performance first, then iterate by sharing the test failures :: That's the guide's TDD pattern.
+- Implement first, then write tests that match whatever it does :: Tests then just confirm the code, bugs included.
+- Ask Claude whether the code works :: Words aren't verification.
+- Skip edge cases to save time :: Edge cases are where bugs hide.
+---
+@ D3 3.6 | CI/CD
+A pipeline runs claude "Review this diff" and hangs forever waiting for input. Fix?
++ claude -p "Review this diff" :: -p/--print runs non-interactively and exits.
+- Set CLAUDE_HEADLESS=true :: Not a real setting.
+- claude --batch "Review this diff" :: No such flag.
+- Pipe /dev/null into stdin :: A Unix workaround, not the documented way.
+---
+@ D3 3.6 | CI/CD
+The pipeline must post findings as inline PR comments, so the output must be machine-parseable. Which flags?
++ --output-format json with --json-schema :: Structured, schema-shaped output for automation.
+- --verbose :: More logs, not structure.
+- --resume :: Continues a session.
+- No flags; parse the prose with regex :: Brittle.
+---
+@ D3 3.6 | CI/CD
+After a developer pushes new commits, the CI review posts the same comments again on unchanged code. Fix?
++ Include the prior review findings in context and ask Claude to report only new or still-unaddressed issues :: Avoids duplicate comments.
+- Disable re-reviews :: Loses checks on the new code.
+- Use a bigger model :: Doesn't solve the duplication.
+- Randomize the prompt each run :: Inconsistent results.
+---
+@ D3 3.6 | CI/CD
+CI-generated tests are low-value and often duplicate existing ones. Which TWO actions help most? (Choose 2)
++ Provide the existing test files in context :: Claude can't avoid duplicating what it can't see.
++ Document testing standards, valuable-test criteria and available fixtures in CLAUDE.md :: CLAUDE.md gives the CI run project context.
+- Increase temperature :: More random, not better.
+- Use the Batch API :: About cost and latency, not quality.
+- Remove CLAUDE.md in CI :: Removes useful context.
+---
+@ D3 3.6 | CI/CD
+A team lets the same Claude session that generated the code also review it in CI. Why is that weaker?
++ The generating session keeps its own reasoning and is less likely to question its decisions; an independent instance catches more :: Session context isolation.
+- The same session can't read diffs :: It can.
+- CI doesn't allow two sessions :: Not a limitation.
+- Reviews must always be done by humans :: Automated independent review is valid.

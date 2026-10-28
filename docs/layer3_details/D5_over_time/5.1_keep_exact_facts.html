@@ -6,11 +6,11 @@
 <title>5.1 · Keeping exact facts in long conversations · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D5_over_time/5.1_keep_exact_facts.md" data-area="D5" style="--a:#f472b6" data-prev="../D4_reliable_answers/4.6_fresh_reviewer.html" data-next="5.2_when_to_call_a_human.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D5">⏳ <span>Over time</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">5.1</span> Keeping exact facts in long conversations</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D5">⏳ <span>Over time</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">5.1</span> Keeping exact facts in long conversations</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 5. Over time → <strong>5.1 Keep exact facts</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">Summaries blur numbers. Keep a <strong>"case facts" block</strong> that's <strong>never summarized</strong> and is sent every time.</blockquote>
@@ -18,6 +18,21 @@
 <p>Message 3: "budget €48,500, deadline 3 March." Message 60, after summarizing: "customer discussed budget". Gone.</p>
 <h2>Know these 🎯</h2>
 <ul><li><strong>Progressive summarization</strong> loses numbers, percentages, dates and what the customer expects.</li><li><strong>Lost in the middle:</strong> Claude reads the <strong>start and end</strong> of long input best and misses the <strong>middle</strong>.<br>→ Put <strong>key findings first</strong>, use clear section headers.</li><li>Tool results pile up: 40+ fields per order lookup when 5 matter → <strong>trim to the relevant fields</strong>.</li><li>Send the <strong>full conversation history</strong> with every request (Claude has no memory).</li><li>Multi-issue chats → keep <strong>structured issue data</strong> (order IDs, amounts, statuses) in a separate layer.</li><li>Helpers should return <strong>structured facts + metadata</strong> (dates, sources), not long reasoning, when the next agent has little room.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>&lt;case_facts&gt;           &lt;!-- never summarized, sent every turn --&gt;
+  customer_id: C-1029
+  order: ORD-4821 · charged twice · 12.50 EUR each
+  promised: refund of second charge by 2026-11-02
+&lt;/case_facts&gt;
+&lt;conversation_summary&gt;
+  Customer reported a double charge, verified identity, agreed to refund...
+&lt;/conversation_summary&gt;</code></pre>
+<p>Trimming a tool result before it piles up:</p>
+<pre class="wrap"><code>40 fields from lookup_order  →  keep: order_id, status, items, total, delivery_date</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Exact numbers live in <code>case_facts</code>. The summary is allowed to be fuzzy.</li><li>Trimming stops irrelevant fields eating the context.</li><li>In long inputs: <strong>key findings at the top</strong>, clear section headers.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>5.4 (context in long sessions) · 1.4 (handoff summaries) · 5.6 (metadata kept with facts)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Trust the summary for exact numbers</td><td>Case facts block</td></tr><tr><td>Bigger context window</td><td>Middle still gets lost</td></tr><tr><td>Keep all 40 fields</td><td>Trim to what matters</td></tr><tr><td>Trim the helper's output after it arrives</td><td>Make the helper send structured facts</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: where do the exact amounts and order numbers live?</summary><div class="ans">
@@ -26,7 +41,7 @@
 <p class="nextline">➡️ Next: <a href="5.2_when_to_call_a_human.html"><code>5.2_when_to_call_a_human.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="../D4_reliable_answers/4.6_fresh_reviewer.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="5.2_when_to_call_a_human.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

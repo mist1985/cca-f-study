@@ -6,11 +6,11 @@
 <title>1.6 · Splitting a job · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D1_agents/1.6_splitting_a_job.md" data-area="D1" style="--a:#a78bfa" data-prev="1.5_hooks.html" data-next="1.7_sessions.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.6</span> Splitting a job</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.6</span> Splitting a job</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 1. Agents → <strong>1.6 Splitting a job</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>Predictable steps → fixed chain (prompt chaining).</strong> <strong>Open-ended → adaptive plan.</strong></blockquote>
@@ -18,6 +18,19 @@
 <ul><li>Job A: review 12 files, then check they fit together. Steps known → a <strong>recipe</strong>.</li><li>Job B: "Add tests to this legacy codebase." Steps unknown → a <strong>detective</strong>.</li></ul>
 <h2>Know these 🎯</h2>
 <ul><li><strong>Prompt chaining</strong> = fixed steps, each working on the last one's output.</li><li><strong>Adaptive</strong> = map the structure → find high-impact areas → prioritized plan → adjust as you discover things.</li><li>Too many files in one pass → <strong>attention dilution</strong>: shallow comments, missed bugs, contradictions.<br>Fix: <strong>one pass per file + a separate cross-file integration pass.</strong></li></ul>
+<h2>👀 What it looks like</h2>
+<p><strong>Prompt chain</strong> (known steps):</p>
+<pre class="wrap"><code>for file in changed_files:  review_local(file)  → findings per file
+then:                       review_integration(all findings + interfaces)
+                                                 → cross-file issues (data flow, contracts)</code></pre>
+<p><strong>Adaptive plan</strong> (unknown steps):</p>
+<pre class="diagram"><code>1. map the structure  →  2. find high-impact areas  →  3. prioritized plan
+                    ↑                                         │
+                    └──── new discovery changes the plan ◄────┘</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>The chain is cheap and predictable. Use it when you can write the steps down in advance.</li><li>The adaptive loop is for "find out why / add tests to legacy code" work.</li><li>The <strong>integration pass</strong> is what catches bugs that live <em>between</em> files.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>1.2 (coordinator chooses the split) · 4.6 (multi-pass review) · 3.4 (plan mode for big changes)</p>
 <h2>⚠️ Exam traps (this is sample question #12)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Bigger model / bigger context window</td><td>Per-file passes + integration pass</td></tr><tr><td>Make developers split their PRs</td><td>Fix the system, not the people</td></tr><tr><td>Run 3 reviews, keep only issues found twice</td><td>That <em>hides</em> real bugs</td></tr><tr><td>Fixed pipeline for an open investigation</td><td>Adaptive plan</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: a 14-file review is inconsistent and contradicts itself. Fix?</summary><div class="ans">
@@ -26,7 +39,7 @@
 <p class="nextline">➡️ Next: <a href="1.7_sessions.html"><code>1.7_sessions.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="1.5_hooks.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="1.7_sessions.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

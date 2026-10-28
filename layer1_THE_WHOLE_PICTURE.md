@@ -70,4 +70,4 @@ But watch the word **"first step"**: then the *simplest fix at the root cause* w
 
 ✅ **Done when** you can say the one idea and the 5 areas out loud without looking.
 
-➡️ Next: `layer2_areas/1_agents.md`
+➡️ Next: `layer1_basics.md` (how the parts talk to each other)

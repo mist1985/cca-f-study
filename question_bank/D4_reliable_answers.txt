@@ -1,0 +1,204 @@
+@ D4 4.1 | CI/CD
+The automated reviewer flags 40 issues per PR, and most are style nitpicks. Developers have started ignoring it entirely. Best fix?
++ Define explicit criteria: report bugs and security issues; skip style, naming and local patterns :: Categorical criteria improve precision.
+- Add "be conservative and only report high-confidence issues" :: Vague calibration words don't improve precision.
+- Drop findings below 0.8 self-reported confidence :: Self-reported confidence is poorly calibrated.
+- Raise the model's temperature :: Unrelated.
+---
+@ D4 4.1 | CI/CD
+"Check that comments are accurate" produces many false positives. Which rewrite is best?
++ "Flag a comment only when its claimed behavior contradicts what the code actually does" :: An explicit, checkable criterion.
+- "Check comments very carefully" :: Still vague.
+- "Flag any comment that could be improved" :: Increases false positives.
+- "Only flag comments if you are sure" :: A confidence word, not a criterion.
+---
+@ D4 4.1 | CI/CD
+One review category ("performance") produces mostly false positives and is hurting trust in all findings. What's the recommended short-term action?
++ Temporarily disable that category while you improve its prompt :: Restores developer trust while you fix it.
+- Keep it on, because some findings are real :: The noise erodes trust in every category.
+- Remove all categories :: Throws away useful findings.
+- Ask developers to read more carefully :: Doesn't fix the noise.
+---
+@ D4 4.1 | CI/CD
+Severity labels (critical/minor) are applied inconsistently across runs. What helps most?
++ Define each severity level with concrete code examples :: Concrete examples give consistent classification.
+- Add more severity levels :: More ambiguity.
+- Let developers relabel everything :: Doesn't fix the generator.
+- Ask Claude to "think harder about severity" :: Vague.
+---
+@ D4 4.2 | Data extraction
+Detailed instructions still give inconsistently formatted findings (some include a fix, some don't, fields vary). Most effective technique?
++ Add a few examples showing the exact output format (location, issue, severity, suggested fix) :: Few-shot examples are the most effective way to get consistent format when instructions alone fail.
+- Repeat the instructions three times :: Doesn't help.
+- Reduce max_tokens :: Truncates output.
+- Use the Batch API :: Unrelated to format.
+---
+@ D4 4.2 | Customer support
+The agent picks the wrong tool on ambiguous requests like "I want to change my order". How should few-shot examples be designed?
++ 2–4 targeted examples of ambiguous cases, showing why one action was chosen over the plausible alternatives :: Showing the reasoning helps Claude generalize.
+- 20 examples of easy, unambiguous requests :: Doesn't teach the hard cases.
+- One example only :: Too little variety.
+- Examples with no explanation of the choice :: Less generalization.
+---
+@ D4 4.2 | Data extraction
+Research papers put citations either inline or in a bibliography, and extraction misses one style. What helps?
++ Few-shot examples demonstrating extraction from both document structures :: Shows Claude how to handle structural variety.
+- A stricter JSON schema :: The shape isn't the problem. Finding the data is.
+- Retry until citations appear :: Retrying the same prompt won't teach the pattern.
+- Extract only papers with bibliographies :: Drops data.
+---
+@ D4 4.2 | CI/CD
+The reviewer flags a safe, intentional pattern as a bug in many files. How can few-shot examples help?
++ Include examples that distinguish acceptable patterns from genuine issues :: Reduces false positives and helps generalization.
+- Include only examples of real bugs :: Doesn't teach what's acceptable.
+- Remove all examples :: Loses the benefit.
+- Add an example per file in the repo :: Too many, and narrow.
+---
+@ D4 4.2 | Data extraction
+Measurements in documents appear as "approx. 2 wks", "14d" or "two weeks", and the model sometimes invents values. Best technique?
++ Few-shot examples showing correct extraction from informal formats, including a "not stated → null" case :: Reduces hallucination in extraction.
+- Tell Claude "don't hallucinate" :: Vague.
+- Make the field required :: Pushes Claude to fabricate.
+- Increase temperature :: More randomness.
+---
+@ D4 4.3 | Data extraction
+Responses sometimes contain broken JSON that crashes the parser. Most reliable fix?
++ Use tool use with a JSON schema as the tool's input, and read the structured tool_use input :: Eliminates JSON syntax errors.
+- Add "Reply ONLY with valid JSON" :: Not guaranteed.
+- Retry whenever parsing fails :: Treats the symptom.
+- Lower max_tokens :: Can truncate JSON and make it worse.
+---
+@ D4 4.3 | Data extraction
+Your extraction uses a strict schema. Which problem can STILL happen?
++ Line items that don't sum to the stated total :: A schema prevents syntax errors, not semantic errors.
+- Missing closing braces :: Prevented.
+- A string where a number is required :: Prevented by the schema.
+- An unknown extra field :: Prevented with additionalProperties: false.
+---
+@ D4 4.3 | Data extraction
+Some invoices have no PO number, and the model invents plausible ones. Best schema change?
++ Make po_number nullable/optional so "not present" is a valid answer :: Prevents fabrication to satisfy required fields.
+- Make po_number required with a regex pattern :: Pressure to invent increases.
+- Remove po_number entirely :: Loses real data when it's present.
+- Add "be honest" to the prompt :: Weaker than a schema fix.
+---
+@ D4 4.3 | Data extraction
+A "category" enum has 6 values, but some documents fit none, and the model forces a wrong one. What should you add?
++ An "other" value plus a detail string field, and "unclear" for ambiguous cases :: An extensible, honest categorization.
+- More specific categories until everything fits :: Never complete.
+- Remove the enum :: Loses consistency.
+- Make the field optional and drop the value :: Loses information.
+---
+@ D4 4.3 | Data extraction
+Dates arrive as "03/04/25", "4 March 2025" and "2025-03-04". The schema type is string. What should you add?
++ Format normalization rules in the prompt alongside the schema (e.g. always output ISO 8601) :: A schema enforces type, and the rules set the format.
+- Nothing; the schema handles formats :: A string type accepts any format.
+- A separate tool per date format :: Overkill.
+- Retry until the formats match :: Wasteful and unreliable.
+---
+@ D4 4.4 | Data extraction
+Validation finds that a vendor name ended up in the "address" field. How should the retry be built?
++ Send the original document, the failed extraction, and the specific validation error :: Retry-with-error-feedback guides the correction.
+- Send the same prompt again :: Likely repeats the error.
+- Send only "try again" :: No guidance.
+- Lower temperature and resend :: Doesn't address the specific error.
+---
+@ D4 4.4 | Data extraction
+A contract's payment terms are defined only in a separate master agreement that wasn't provided. Validation fails on payment_terms. Will retries help?
++ No: the information isn't in the source, so return null/flag it instead of retrying :: Retries can't produce information that's absent.
+- Yes, after 3 retries it will appear :: It won't. That pressures fabrication.
+- Yes, if the temperature is raised :: Randomness doesn't create facts.
+- Yes, with a stronger model :: The data simply isn't there.
+---
+@ D4 4.4 | Data extraction
+For which TWO errors is a retry with error feedback likely to succeed? (Choose 2)
++ A date in the wrong format :: A format mismatch is fixable.
++ A field placed in the wrong slot of the structure :: A structural output error is fixable.
+- A tax ID that doesn't appear anywhere in the document :: Absent information.
+- A price only listed in an external catalog not provided :: Absent from the source.
+- A signature that is unreadable in the scan :: The information isn't recoverable.
+---
+@ D4 4.4 | CI/CD
+Developers dismiss many review findings, and you want to know which kinds of code trigger false positives. What do you add?
++ A detected_pattern field on each finding, then analyze dismissals by pattern :: Enables systematic false-positive analysis.
+- A free-text "notes" field :: Hard to aggregate.
+- Remove the dismiss button :: Hides the signal.
+- Ask developers to email feedback :: Unstructured.
+---
+@ D4 4.4 | Data extraction
+How can extraction itself detect invoices whose stated total doesn't match their line items?
++ Extract both calculated_total and stated_total, and set a conflict_detected flag when they differ :: A self-correcting validation design.
+- Extract only the stated total :: Can't detect conflicts.
+- Trust the larger number :: Arbitrary.
+- Ask Claude if it's confident :: Not reliable.
+---
+@ D4 4.5 | CI/CD
+Two workflows: (1) a pre-merge check developers wait on, (2) a weekly audit report. Your manager wants both on the Batch API for the 50% saving. Best decision?
++ Batch only the weekly audit; keep the pre-merge check synchronous :: Batch has up to 24 h and no latency SLA, so it's unsuitable for blocking work.
+- Batch both, with polling :: Developers could wait for hours.
+- Keep both synchronous because batch results come back out of order :: custom_id solves ordering.
+- Batch both, with a real-time fallback on timeout :: Unnecessary complexity.
+---
+@ D4 4.5 | Data extraction
+Batch results come back in a different order from your requests. How do you match them?
++ By the custom_id you set on each request :: custom_id correlates requests and responses.
+- By position in the results list :: Order isn't guaranteed.
+- By timestamp :: Not reliable.
+- By comparing the response text to the input :: Fragile.
+---
+@ D4 4.5 | Data extraction
+An extraction needs to call your database tool mid-request and then continue reasoning. Can it run in the Batch API?
++ No: the batch API doesn't support multi-turn tool calling within one request; use the synchronous API :: A batch request can't pause for your tool to run.
+- Yes, batch supports tool loops natively :: It doesn't.
+- Yes, if you set a longer timeout :: Not about time.
+- Yes, by using custom_id :: custom_id is for matching, not tool loops.
+---
+@ D4 4.5 | Data extraction
+Your SLA promises results within 30 hours. Batch processing can take up to 24 hours. How often should you submit batches?
++ About every 4 hours :: Up to 4 h of waiting + 24 h of processing = 28 h, within the 30 h SLA.
+- Once every 24 hours :: Up to 48 h worst case.
+- Every 12 hours :: Up to 36 h worst case.
+- Batching can never meet a 30-hour SLA :: It can, with frequent submissions.
+---
+@ D4 4.5 | Data extraction
+In a batch of 5,000 documents, 120 failed: some were too long for the context. Best handling?
++ Resubmit only the 120 failed ones (by custom_id), chunking the oversized documents :: Targeted resubmission with the fix.
+- Resubmit all 5,000 :: Wasteful.
+- Ignore the failures :: Loses data.
+- Resubmit the 120 unchanged :: The oversized ones will fail again.
+---
+@ D4 4.5 | Data extraction
+Before processing 100,000 documents with batch, what reduces costly resubmissions?
++ Refine the prompt on a small sample set first :: Maximizes first-pass success.
+- Submit everything immediately and fix later :: Expensive iteration.
+- Use the largest model regardless :: Doesn't ensure the prompt is right.
+- Disable validation :: Hides problems.
+---
+@ D4 4.6 | Code generation
+After Claude writes a feature, you ask the same session to "carefully review your code". It finds almost nothing, but a teammate later finds 3 bugs. Why?
++ The same session keeps its reasoning context and is less likely to question its own decisions :: Self-review limitation.
+- The prompt wasn't polite enough :: Unrelated.
+- The model can't review code :: It can, especially from a fresh context.
+- The bugs were in comments :: Not the point.
+---
+@ D4 4.6 | Code generation
+Which is MOST effective for catching subtle issues in generated code?
++ A second, independent Claude instance without the generator's reasoning context :: Independent review beats self-review.
+- Turning on extended thinking in the same session :: The same context means the same bias.
+- Asking the generator to verify before finishing :: Still self-review.
+- Running the same review prompt twice in the same session :: Same bias.
+---
+@ D4 4.6 | CI/CD
+Which TWO describe a strong multi-pass review for a large PR? (Choose 2)
++ Focused per-file passes for local issues :: Consistent depth per file.
++ A separate integration pass for cross-file data flow :: Catches issues between files.
+- One pass over all files at once :: Attention dilution.
+- Three identical full passes, keeping only issues found by all three :: Suppresses real, intermittently caught bugs.
+- Skipping files with no tests :: Leaves gaps.
+---
+@ D4 4.6 | CI/CD
+You want to route review findings so humans see the uncertain ones first. What pattern does the guide describe?
++ A verification pass where the model self-reports confidence per finding, used for calibrated routing :: Confidence supports routing, once calibrated.
+- Show humans findings in random order :: Wastes reviewer attention.
+- Auto-accept all findings above 50% :: An uncalibrated threshold.
+- Hide low-confidence findings entirely :: May hide real bugs.

@@ -6,11 +6,11 @@
 <title>2.2 · Error messages · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D2_tools/2.2_errors.md" data-area="D2" style="--a:#22d3ee" data-prev="2.1_descriptions.html" data-next="2.3_who_gets_which_tools.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.2</span> Error messages</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.2</span> Error messages</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.2 Errors</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">An error must say <strong>what broke</strong> and <strong>whether a retry helps</strong>. And <strong>empty ≠ failed</strong>.</blockquote>
@@ -18,6 +18,25 @@
 <p>"Operation failed." Retry? Tell the customer? Give up? Claude can't know.<br>"Stock system busy, retry in 60 s" → now it knows.</p>
 <h2>Know these 🎯</h2>
 <ul><li>MCP flag: <strong><code>isError: true</code></strong> tells Claude "this is a failure".</li><li>4 kinds of error:<ul><li><strong>transient</strong>: timeout, service down → retry</li><li><strong>validation</strong>: bad input → fix the input</li><li><strong>business</strong>: policy says no → don't retry, explain kindly</li><li><strong>permission</strong>: not allowed</li></ul></li><li>Return: <code>errorCategory</code> + <code>isRetryable</code> + a readable message.</li><li>Business rule broken → <code>retryable: false</code> + a <strong>customer-friendly explanation</strong>.</li><li><strong>Access failure</strong> (couldn't look) ≠ <strong>valid empty result</strong> (looked, found nothing).</li><li>Helpers <strong>fix temporary errors themselves</strong> and pass up only what they can't fix, with <strong>what they tried + partial results</strong>.</li></ul>
+<h2>👀 What it looks like</h2>
+<p>The tool result Claude receives:</p>
+<pre class="wrap"><code>{&quot;isError&quot;: true,
+ &quot;content&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;...the error details below, as text...&quot;}]}</code></pre>
+<p>The error details (your own structure inside the text):</p>
+<pre class="wrap"><code>{&quot;errorCategory&quot;: &quot;transient&quot;,
+ &quot;isRetryable&quot;: true,
+ &quot;message&quot;: &quot;Inventory service timed out after 10s. Retry once in ~30s.&quot;}</code></pre>
+<p>A business-rule error:</p>
+<pre class="wrap"><code>{&quot;errorCategory&quot;: &quot;business&quot;,
+ &quot;isRetryable&quot;: false,
+ &quot;message&quot;: &quot;Refund exceeds the $200 self-service limit. Tell the customer a manager will review it.&quot;}</code></pre>
+<p>A valid empty result (<strong>not</strong> an error):</p>
+<pre class="wrap"><code>{&quot;isError&quot;: false,
+ &quot;content&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;No orders found for C-1029 in the last 90 days.&quot;}]}</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li><code>isError: true</code> = failure. <code>isError: false</code> + "no orders" = a successful search with zero results.</li><li><code>errorCategory</code> + <code>isRetryable</code> let Claude choose: retry, fix the input, or explain.</li><li>The business message is <strong>customer-friendly</strong>, so Claude can pass it on.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>5.3 (errors across agents) · 1.4 (business rules) · 2.1 (clear text helps Claude act)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Same "Operation failed" for everything</td><td>Category + retryable + message</td></tr><tr><td>Timeout → return empty list</td><td>That's an error, not "no results"</td></tr><tr><td>Every tiny error goes up to the lead</td><td>Retry locally first</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: why is returning [] on a timeout dangerous?</summary><div class="ans">
@@ -26,7 +45,7 @@
 <p class="nextline">➡️ Next: <a href="2.3_who_gets_which_tools.html"><code>2.3_who_gets_which_tools.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="2.1_descriptions.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2.3_who_gets_which_tools.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

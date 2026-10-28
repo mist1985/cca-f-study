@@ -6,11 +6,11 @@
 <title>2.4 · MCP for a team · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D2_tools/2.4_mcp_for_a_team.md" data-area="D2" style="--a:#22d3ee" data-prev="2.3_who_gets_which_tools.html" data-next="2.5_built_in_tools.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.4</span> MCP for a team</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.4</span> MCP for a team</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.4 MCP for a team</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule">Team-shared servers → <strong>project <code>.mcp.json</code></strong> with secrets as <strong><code>${VARIABLES}</code></strong>.</blockquote>
@@ -19,6 +19,27 @@
 <h2>Know these 🎯</h2>
 <div class="tw"><table><thead><tr><th>Where</th><th>Who gets it</th><th>Use for</th></tr></thead><tbody><tr><td><code>.mcp.json</code> (project, in git)</td><td>whole team</td><td>shared tooling</td></tr><tr><td><code>~/.claude.json</code> (user)</td><td>only you</td><td>personal / experiments</td></tr></tbody></table></div>
 <ul><li><code>${GITHUB_TOKEN}</code> in <code>.mcp.json</code> → each person's own token fills it in. No secret in git.</li><li>Tools from <strong>all</strong> configured servers are found at connection time and are <strong>all available at once</strong>.</li><li><strong>Resources</strong> = read-only catalogs (issue lists, docs, database schemas). They show Claude what exists, <strong>without</strong> exploratory tool calls.</li><li>Claude uses built-in Grep instead of your better MCP tool? → <strong>Improve the MCP tool's description.</strong></li><li>Standard system (Jira, GitHub)? → use an <strong>existing community server</strong>. Build custom servers only for team-specific workflows.</li></ul>
+<h2>👀 What it looks like</h2>
+<p><code>.mcp.json</code> at the project root (committed to git):</p>
+<pre class="wrap"><code>{
+  &quot;mcpServers&quot;: {
+    &quot;github&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://api.githubcopilot.com/mcp/&quot;,
+      &quot;headers&quot;: {&quot;Authorization&quot;: &quot;Bearer ${GITHUB_TOKEN}&quot;}
+    },
+    &quot;jira&quot;: {
+      &quot;command&quot;: &quot;npx&quot;, &quot;args&quot;: [&quot;-y&quot;, &quot;&lt;existing-community-jira-server&gt;&quot;],
+      &quot;env&quot;: {&quot;JIRA_API_TOKEN&quot;: &quot;${JIRA_API_TOKEN}&quot;}
+    }
+  }
+}</code></pre>
+<p>Using a resource instead of exploratory calls:</p>
+<pre class="wrap"><code>@postgres:schema://orders   → the table schema is put straight into context</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>In git = the whole team gets the same servers.</li><li><code>${GITHUB_TOKEN}</code> = each developer's <strong>own</strong> token, from their environment. No secret in git.</li><li>Both servers' tools are available <strong>at the same time</strong>.</li><li>Personal/experimental servers go in <code>~/.claude.json</code> instead.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>2.1 (MCP descriptions vs Grep) · 3.1 (same rule: project = shared, <code>~</code> = personal)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Real token written in <code>.mcp.json</code></td><td><code>${GITHUB_TOKEN}</code></td></tr><tr><td>Team server in your user config</td><td>Project <code>.mcp.json</code></td></tr><tr><td>Build your own Jira server</td><td>Use the community one</td></tr><tr><td>Many tool calls to discover the DB schema</td><td>Expose it as an MCP <strong>resource</strong></td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: how does the team share a server without sharing a password?</summary><div class="ans">
@@ -27,7 +48,7 @@
 <p class="nextline">➡️ Next: <a href="2.5_built_in_tools.html"><code>2.5_built_in_tools.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="2.3_who_gets_which_tools.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2.5_built_in_tools.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

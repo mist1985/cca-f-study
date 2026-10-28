@@ -9,12 +9,16 @@ Whole picture first, then zoom in:
 
 | Layer | What | Time |
 |---|---|---|
-| 1 | One page: the whole exam | 5 min |
+| 1 | The whole exam on one page + how the parts work | 12 min |
 | 2 | 5 areas, one overview each | ~5 min each |
-| 3 | 30 cards, one per official task statement (1.1 – 5.6) | ~3 min each |
-| 4 | Exam vs current docs, 16 practice questions, road to 90% | — |
+| 3 | 30 cards, one per official task statement (1.1 – 5.6), each with an example and connections | ~4 min each |
+| 4 | Exam vs current docs, warm-up questions, the 4 official hands-on exercises, road to 90% | — |
 
-Plus 46 flashcards, progress tracking, a focus timer, and swipe / arrow-key navigation.
+Plus:
+- 🎯 **148 exam-style questions** covering all 30 task statements, every option explained
+- ⏱️ **Mock exam**: 60 questions weighted like the real exam, 120 min, score per area
+- 🔁 **My mistakes** review · 🃏 **46 flashcards** · 📖 **Glossary**
+- Progress tracking, focus timer, swipe / arrow-key navigation
 
 Content is checked against Anthropic's official exam guide (v1.0, July 2026). Get the guide from the
 [official exam page](https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request).
@@ -23,7 +27,7 @@ Content is checked against Anthropic's official exam guide (v1.0, July 2026). Ge
 The Markdown files are the source. After editing any of them:
 
 ```sh
-python3 build_site.py   # regenerates docs/
+python3 build_site.py   # regenerates docs/ (questions live in question_bank/*.txt)
 ```
 
 GitHub Pages serves the `docs/` folder.

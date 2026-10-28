@@ -1,0 +1,212 @@
+@ D5 5.1 | Customer support
+In a long chat, the customer mentioned a €1,240 refund promised for 14 March. After several summarizations, the agent only knows that "a refund was discussed". Best fix?
++ Keep a persistent "case facts" block (amounts, dates, order numbers, statuses) outside the summarized history, included in every prompt :: Exact facts survive.
+- Summarize less often but keep summarizing :: Still lossy.
+- Switch to a model with a larger context window :: Doesn't stop summaries losing details.
+- Ask the customer to repeat the details :: Bad experience, and it doesn't fix the system.
+---
+@ D5 5.1 | Customer support
+Every lookup_order call returns 40+ fields, but only 5 matter for returns. Context fills fast. What should you do?
++ Trim tool outputs to the relevant fields before they accumulate in context :: Saves tokens and attention.
+- Keep all fields in case they're useful :: They eat context in proportion to their size, not their relevance.
+- Call lookup_order less often and guess :: Unreliable.
+- Increase max_tokens :: Output length isn't the problem.
+---
+@ D5 5.1 | Multi-agent research
+A synthesis prompt combines 12 long subagent reports, and findings from the middle reports are often missed. What helps?
++ Put key findings summaries at the beginning and organize details with explicit section headers :: Mitigates the lost-in-the-middle effect.
+- Put the most important report in the exact middle :: That's where attention is weakest.
+- Remove the section headers to save space :: Makes navigation worse.
+- Shuffle report order each run :: Inconsistent.
+---
+@ D5 5.1 | Multi-agent research
+A downstream synthesis agent has a tight context budget, and upstream agents send long reasoning chains. Best fix?
++ Change the upstream agents to return structured data (key facts, citations, relevance scores) instead of verbose reasoning :: Fix at the source.
+- Truncate whatever arrives at the end :: Loses data randomly.
+- Give synthesis a bigger window :: Avoids the design problem.
+- Drop the upstream agents :: Loses the work.
+---
+@ D5 5.1 | Customer support
+Why must the complete conversation history be sent with each API request?
++ The API keeps no memory; coherence depends on the history you send :: Stateless API.
+- To increase the bill :: No.
+- Because tools require it :: Not the reason.
+- It isn't needed; Claude remembers :: It doesn't.
+---
+@ D5 5.1 | Customer support
+A customer raises 3 separate issues (two orders, one account change) in one long session, and details get mixed up. What helps?
++ Persist structured data for each issue (order IDs, amounts, statuses) in a separate context layer :: Keeps the issues distinct and exact.
+- Handle all three from the running summary :: The summary blurs them.
+- Close the chat and ask for three separate chats :: Bad experience.
+- Escalate to a human :: Multiple issues aren't an escalation trigger.
+---
+@ D5 5.2 | Customer support
+A customer types: "Stop. I want to speak to a human now." The issue looks easy to solve. What should the agent do?
++ Escalate to a human immediately, without first trying to solve it :: Explicit requests are honored right away.
+- Solve it quickly first, then offer a human :: Ignores the explicit request.
+- Ask why they want a human :: Adds friction.
+- Check sentiment before deciding :: Sentiment isn't the trigger. The request is.
+---
+@ D5 5.2 | Customer support
+A customer is frustrated ("this is ridiculous!") about a late parcel, a standard issue the agent can handle. They haven't asked for a human. What should the agent do?
++ Acknowledge the frustration and offer to resolve it; escalate only if they ask for a human again :: Frustration alone isn't a trigger.
+- Escalate immediately because they're upset :: Sentiment is an unreliable proxy.
+- Ignore the emotion and paste the tracking link :: Poor experience.
+- End the conversation :: Unacceptable.
+---
+@ D5 5.2 | Customer support
+A customer asks the agent to match a competitor's lower price. Policy covers price adjustments only for the shop's own price drops. What's correct?
++ Escalate: the policy is silent on competitor matching, so it's a policy gap :: Policy gaps and exceptions are escalation triggers.
+- Approve it, since the customer is loyal :: Not authorized.
+- Deny it firmly, since policy doesn't mention it :: Silence isn't a documented "no". A human decides.
+- Apply the own-site rule to the competitor price :: That stretches the policy.
+---
+@ D5 5.2 | Customer support
+The agent escalates easy cases and tries to handle complex policy exceptions on its own. First-contact resolution is far below target. Best first fix?
++ Add explicit escalation criteria with few-shot examples to the system prompt :: The proportionate fix for unclear decision boundaries.
+- Escalate when self-reported confidence is below 7/10 :: Poorly calibrated, and confidently wrong on hard cases.
+- Train a separate escalation classifier :: Over-engineered before prompt fixes are tried.
+- Escalate on negative sentiment :: Sentiment doesn't track complexity.
+---
+@ D5 5.2 | Customer support
+get_customer returns 3 accounts named "John Lee". What should the agent do?
++ Ask the customer for another identifier (email, phone, order number) :: Clarify. Don't guess.
+- Pick the most recently active account :: A heuristic guess can expose the wrong account.
+- Pick the account with the most orders :: Still a guess.
+- Escalate immediately :: Usually unnecessary. Asking resolves it.
+---
+@ D5 5.2 | Customer support
+Which TWO are valid escalation triggers? (Choose 2)
++ The customer explicitly asks for a human :: Honor it immediately.
++ The agent can't make meaningful progress :: A valid trigger.
+- The customer uses strong language :: Sentiment isn't complexity.
+- The agent's confidence is below 0.7 :: Uncalibrated.
+- The conversation is longer than 10 messages :: Length isn't a trigger.
+---
+@ D5 5.3 | Multi-agent research
+A search subagent times out. Which design gives the coordinator the best chance to recover?
++ Return structured error context: failure type, attempted query, partial results, possible alternatives :: Enables informed recovery decisions.
+- Retry with backoff, then return a generic "search unavailable" :: Generic statuses hide useful context.
+- Return an empty result marked as success :: Suppresses the error.
+- Throw an exception that ends the whole research run :: One failure shouldn't kill the workflow.
+---
+@ D5 5.3 | Multi-agent research
+Which TWO are anti-patterns in multi-agent error handling? (Choose 2)
++ Returning empty results marked as success when a source failed :: Silent suppression.
++ Terminating the entire workflow because one subagent failed :: Over-reaction.
+- Returning partial results with a note on what failed :: Recommended.
+- Retrying a transient error locally before propagating it :: Recommended.
+- Including what was attempted in the error :: Recommended.
+---
+@ D5 5.3 | Multi-agent research
+One of four sources is unavailable, and the report must still go out. How should it be structured?
++ Include coverage annotations showing which findings are well supported and which areas have gaps from the unavailable source :: Honest coverage reporting.
+- Leave out any mention of the missing source :: Readers would assume full coverage.
+- Delay the report until all sources work :: May never happen.
+- Fill the gap with general knowledge :: Unsourced claims.
+---
+@ D5 5.3 | Multi-agent research
+Why is "search unavailable" a weak error message for a coordinator?
++ It hides details (what query, why it failed, any partial results) needed for a recovery decision :: Generic statuses hide valuable context.
+- It's too long :: It's short. That's the problem.
+- Coordinators can't read errors :: They can.
+- It should be in capitals :: Irrelevant.
+---
+@ D5 5.4 | Developer productivity
+Late in a long exploration session, Claude starts describing "typical MVC patterns" instead of the specific classes it found earlier. What's happening, and the best response?
++ Context degradation; keep key findings in a scratchpad file and refer back to it :: Persisted findings counteract degradation.
+- The model is broken; restart without notes :: Loses the work.
+- It's fine; generic answers are more accurate :: They're less accurate for this codebase.
+- Increase max_tokens :: Doesn't fix context degradation.
+---
+@ D5 5.4 | Developer productivity
+You need answers to "find all test files" and "trace the refund flow's dependencies" without flooding the main context. Approach?
++ Spawn subagents for those specific questions while the main agent keeps high-level coordination :: Isolates verbose exploration.
+- Do it all in the main session :: Floods context.
+- Ask the user to find them :: Not using the tools.
+- Skip the investigation :: Loses needed information.
+---
+@ D5 5.4 | Developer productivity
+A multi-agent exploration crashed halfway. How should it resume without starting over?
++ Each agent exports its state to a manifest; the coordinator loads it on resume and injects it into prompts :: Structured crash recovery.
+- Rely on the conversation summary :: Summaries don't survive a crash.
+- Restart from scratch :: Wasteful.
+- Ask Claude to remember :: It can't.
+---
+@ D5 5.4 | Developer productivity
+Exploration output is filling the context in a long session, but the task isn't finished. Which command fits?
++ /compact :: Reduces context usage and continues the task.
+- /clear :: Throws away the task context. Use it between unrelated tasks.
+- -p :: The non-interactive flag.
+- /memory :: Shows memory files. Doesn't free context.
+---
+@ D5 5.4 | Developer productivity
+Before spawning subagents for phase 2 of an investigation, what does the guide recommend?
++ Summarize the key findings from phase 1 and inject that summary into the phase-2 context :: Carries forward the essentials.
+- Give phase-2 subagents the full phase-1 transcript :: Noisy and wasteful.
+- Give phase-2 subagents nothing :: They'd redo work.
+- Skip directly to implementation :: Skips needed investigation.
+---
+@ D5 5.5 | Data extraction
+Overall extraction accuracy is 97%. Leadership wants to remove human review. What should you do first?
++ Analyze accuracy by document type and by field to verify every segment performs well :: An aggregate can hide a weak segment.
+- Remove review: 97% is excellent :: Handwritten forms might be at 60%.
+- Remove review only on Fridays :: Arbitrary.
+- Ask the model if it agrees :: Not a measurement.
+---
+@ D5 5.5 | Data extraction
+You only review low-confidence extractions. Why is that risky, and what should you add?
++ New error types can hide among high-confidence items; add stratified random sampling of high-confidence extractions :: Ongoing error measurement where nobody looks.
+- Nothing is risky; high confidence means correct :: Confidence isn't correctness.
+- Review everything forever :: Doesn't scale.
+- Lower the confidence threshold to 0 :: Same as reviewing everything.
+---
+@ D5 5.5 | Data extraction
+The model outputs a confidence score per field. How should you use it to route reviews?
++ Calibrate thresholds per field using a labeled validation set, then route low-confidence fields to humans :: Calibrated, field-level routing.
+- Treat 0.9 as 90% correct without testing :: Uncalibrated.
+- Use one global threshold for all fields :: Fields differ in difficulty.
+- Ignore confidence completely :: It's useful once calibrated.
+---
+@ D5 5.5 | Data extraction
+Reviewer capacity is limited. Which extractions should go to humans first?
++ Low-confidence ones, and those from ambiguous or contradictory source documents :: Prioritizes where errors are likely.
+- The oldest ones first :: Ignores risk.
+- Random ones only :: Useful for sampling, not for prioritizing.
+- The ones with the highest totals only :: Value alone isn't the criterion.
+---
+@ D5 5.6 | Multi-agent research
+Two credible sources give different market sizes: €2.1B (2023) and €2.8B (2025). How should the synthesis handle it?
++ Include both, attributed with their sources and dates, and mark it as contested :: Annotate conflicts. The dates may explain the difference.
+- Pick the newer value and drop the older :: Arbitrary selection loses information.
+- Average them :: An invented number.
+- Remove the topic :: Loses relevant information.
+---
+@ D5 5.6 | Multi-agent research
+Final reports lose which source supports which claim after summarization. What should subagents output?
++ Structured claim-source mappings (claim, source URL or document name, relevant excerpt) that synthesis preserves and merges :: Keeps provenance through summarization.
+- Plain prose summaries :: Attribution gets lost.
+- A list of URLs at the end :: Not linked to specific claims.
+- Only the claims :: No sources at all.
+---
+@ D5 5.6 | Multi-agent research
+Why should subagents include publication or collection dates in their structured outputs?
++ So time differences aren't misread as contradictions :: Temporal data needs dates.
+- To make the report longer :: No.
+- Because the API requires dates :: It doesn't.
+- To sort sources alphabetically :: Unrelated.
+---
+@ D5 5.6 | Multi-agent research
+A research report mixes financial figures, news events and technical findings. How should the synthesis format them?
++ Financial data as tables, news as prose, technical findings as structured lists :: Match the format to the content type.
+- Everything as bullet points :: A uniform format fits some content poorly.
+- Everything as prose :: Hard to compare numbers.
+- Everything as one big table :: Poor for narrative.
+---
+@ D5 5.6 | Multi-agent research
+Which TWO practices preserve provenance and handle uncertainty well? (Choose 2)
++ Report sections that separate well-established findings from contested ones :: Makes uncertainty visible.
++ Passing conflicting values to the coordinator, annotated, so it decides how to reconcile them :: Keeps both values visible for an informed decision.
+- Letting each subagent silently resolve conflicts :: Hides uncertainty.
+- Removing source excerpts to save tokens :: Weakens verification.
+- Converting all numbers to ranges :: Loses precision.

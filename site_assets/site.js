@@ -141,12 +141,13 @@
   }
   addEventListener("keydown", function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test(e.target.tagName)) return;
-    if (body.classList.contains("is-flash")) return; // flashcards has its own keys
+    if (body.classList.contains("is-flash") || body.classList.contains("is-quiz")) return; // own keys
     if (e.key === "ArrowRight") go("next");
     else if (e.key === "ArrowLeft") go("prev");
     else if (e.key === "d") toggleDone();
     else if (e.key === "m") location.href = url("index.html");
     else if (e.key === "t") toggleTimer();
+    else if (e.key === "g") location.href = url("glossary.html");
   });
   var sx, sy, st, skip;
   addEventListener("touchstart", function (e) {

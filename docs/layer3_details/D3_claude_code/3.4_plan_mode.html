@@ -6,11 +6,11 @@
 <title>3.4 · Plan mode vs just doing it · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D3_claude_code/3.4_plan_mode.md" data-area="D3" style="--a:#4ade80" data-prev="3.3_path_rules.html" data-next="3.5_refining.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.4</span> Plan mode vs just doing it</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D3">💻 <span>Claude Code</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">3.4</span> Plan mode vs just doing it</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 3. Claude Code → <strong>3.4 Plan mode</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>Big, multi-file, or several valid approaches → plan mode.</strong> Small and clear → direct execution.</blockquote>
@@ -19,6 +19,18 @@
 <h2>Know these 🎯</h2>
 <div class="tw"><table><thead><tr><th>Plan mode ✅</th><th>Direct execution ✅</th></tr></thead><tbody><tr><td>Monolith → microservices</td><td>Single-file bug with a clear stack trace</td></tr><tr><td>Library migration touching 45+ files</td><td>Add one date validation check</td></tr><tr><td>Choosing between integration approaches</td><td>Add one validation to one function</td></tr></tbody></table></div>
 <ul><li>Plan mode = <strong>explore and design safely before changing anything</strong> → avoids expensive rework.</li><li><strong>Explore subagent</strong> = does the noisy searching and returns a <strong>summary</strong> → your main context stays clean.</li><li>Combine: <strong>plan</strong> the migration, then <strong>execute directly</strong> to implement it.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>You:    [Shift+Tab → plan mode] Migrate from moment.js to date-fns.
+Claude: (reads, greps: 47 files use moment) Plan:
+        1. Add date-fns, keep moment during transition
+        2. Replace formatting helpers in src/utils/date.ts first
+        3. Migrate modules by folder; run tests after each
+        4. Remove moment
+You:    Approve → Claude switches to editing and implements the plan</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Plan mode: <strong>read and design, no edits</strong> until you approve.</li><li>The plan exposes dependencies <strong>before</strong> they cause rework.</li><li>After approval, <strong>direct execution</strong> carries out the agreed plan.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>1.6 (adaptive decomposition) · 5.4 (Explore subagent keeps context clean)</p>
 <h2>⚠️ Exam traps (this is sample question #5)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Start coding, let boundaries "emerge"</td><td>Plan first. Late discoveries = rework</td></tr><tr><td>Direct execution with detailed instructions</td><td>Assumes you already know the answer</td></tr><tr><td>Switch to plan mode only if it gets hard</td><td>The complexity is already known</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: give one example for each mode.</summary><div class="ans">
@@ -27,7 +39,7 @@
 <p class="nextline">➡️ Next: <a href="3.5_refining.html"><code>3.5_refining.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="3.3_path_rules.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="3.5_refining.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

@@ -6,11 +6,11 @@
 <title>1.2 · Lead + helpers (coordinator &amp; subagents) · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D1_agents/1.2_lead_and_helpers.md" data-area="D1" style="--a:#a78bfa" data-prev="1.1_the_loop.html" data-next="1.3_briefing_helpers.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.2</span> Lead + helpers (coordinator &amp; subagents)</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D1">🤖 <span>Agents</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">1.2</span> Lead + helpers (coordinator &amp; subagents)</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 1. Agents → <strong>1.2 Lead + helpers</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>Hub and spoke.</strong> Helpers are isolated. Everything goes through the lead.</blockquote>
@@ -18,6 +18,18 @@
 <p>A team lead with specialists. Each specialist works in their own room with a fresh notepad. They don't talk to each other. The lead sees every message and every problem.</p>
 <h2>Know these 🎯</h2>
 <ul><li>Lead's job: split → hand out → collect → combine.</li><li>Lead <strong>picks which helpers to use</strong> based on the question. It doesn't always run the full pipeline.</li><li><strong>Refinement loop:</strong> lead checks the combined result for gaps → sends targeted work again → combines again.</li><li>Split the scope so helpers <strong>don't overlap</strong> (different subtopics or source types each).</li><li>Why everything goes through the lead: <strong>observability, consistent error handling, controlled information flow.</strong></li><li>⚠️ <strong>Too-narrow splitting = missing coverage.</strong> "Creative industries" split into 3 <em>visual-art</em> topics → music and film never get researched.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="diagram"><code>                 ┌──────────────┐
+   user ───────► │ COORDINATOR  │ ◄── checks synthesis for gaps,
+                 └──┬────┬────┬─┘     re-delegates if needed
+          brief ▼   ▼    ▼   ▲ final result only
+           ┌──────┐┌──────┐┌──────────┐
+           │search││ docs ││synthesis │   ✗ no arrows between helpers
+           └──────┘└──────┘└──────────┘</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Arrows only go <strong>lead ↔ helper</strong>. That's why the lead sees every result and every error.</li><li>Each helper gets a <strong>different slice</strong> of the topic (no overlap, no gaps).</li><li>Simple question → lead uses 1 helper (or none). Big research → many.</li><li>After synthesis, the lead asks <em>"what's missing?"</em> and sends targeted follow-up work.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>1.3 (what goes in each brief) · 5.3 (errors flow back to the hub) · 5.6 (sources flow back with results)</p>
 <h2>⚠️ Exam traps</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Report misses whole topics → blame the search helper</td><td>Lead's split was too narrow (check the lead's logs)</td></tr><tr><td>Helpers talk directly</td><td>Everything goes through the lead</td></tr><tr><td>Always run every helper</td><td>Lead picks helpers by complexity</td></tr></tbody></table></div>
 <details class="bonus"><summary>🔬 Bonus (beyond the official guide)</summary><div class="ans">
@@ -29,7 +41,7 @@
 <p class="nextline">➡️ Next: <a href="1.3_briefing_helpers.html"><code>1.3_briefing_helpers.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="1.1_the_loop.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="1.3_briefing_helpers.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

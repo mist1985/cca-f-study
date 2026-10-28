@@ -6,11 +6,11 @@
 <title>4.5 · Message Batches API · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D4_reliable_answers/4.5_batch_api.md" data-area="D4" style="--a:#fbbf24" data-prev="4.4_check_and_retry.html" data-next="4.6_fresh_reviewer.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.5</span> Message Batches API</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D4">🎯 <span>Reliable answers</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">4.5</span> Message Batches API</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 4. Answers → <strong>4.5 Batch API</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>50% cheaper, up to 24 h, no guaranteed time.</strong> Only for work <strong>nobody is waiting on</strong>.</blockquote>
@@ -19,6 +19,23 @@
 <h2>Know these 🎯</h2>
 <div class="tw"><table><thead><tr><th>✅ Good fit</th><th>❌ Bad fit</th></tr></thead><tbody><tr><td>Overnight reports</td><td>Blocking pre-merge check</td></tr><tr><td>Weekly audits</td><td>Live chat</td></tr><tr><td>Nightly test generation</td><td>Anything a person waits on</td></tr></tbody></table></div>
 <ul><li><strong><code>custom_id</code></strong> matches each answer to its request (answers come back in any order).</li><li><strong>No multi-turn tool calling</strong> inside one batch request. Your tool can't run halfway through.</li><li>Failures → resubmit <strong>only the failed ones</strong> (by <code>custom_id</code>), fixed (e.g. split documents that were too long).</li><li>Test the prompt on a <strong>sample first</strong> → fewer expensive resubmits.</li><li><strong>SLA maths:</strong> processing can take 24 h. To promise results in 30 h, submit every <strong>4 hours</strong> (wait up to 4 h + 24 h processing ≤ 30 h, with a buffer).</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>batch = client.messages.batches.create(requests=[
+    {&quot;custom_id&quot;: f&quot;doc-{d.id}&quot;,
+     &quot;params&quot;: {&quot;model&quot;: MODEL, &quot;max_tokens&quot;: 1024,
+                &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: d.text}]}}
+    for d in documents])
+
+# later (poll until processing_status == &quot;ended&quot;):
+for r in client.messages.batches.results(batch.id):
+    if r.result.type == &quot;succeeded&quot;:
+        save(r.custom_id, r.result.message)
+    else:
+        retry_later.append(r.custom_id)       # resubmit ONLY these (fixed, e.g. chunked)</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li><code>custom_id</code> is how you match each result. Order is <strong>not</strong> guaranteed.</li><li>Failures are resubmitted <strong>individually</strong>, not the whole batch.</li><li>Each request is <strong>one</strong> call: no tool loop inside it.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>3.6 (blocking CI checks stay synchronous) · 4.4 (fix the prompt on a sample first)</p>
 <h2>⚠️ Exam traps (this is sample question #11)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Move both workflows to batch</td><td>Batch only the overnight report</td></tr><tr><td>Avoid batch because of ordering</td><td><code>custom_id</code> solves ordering</td></tr><tr><td>Batch + timeout fallback</td><td>Needless complexity</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: why not batch the pre-merge check?</summary><div class="ans">
@@ -27,7 +44,7 @@
 <p class="nextline">➡️ Next: <a href="4.6_fresh_reviewer.html"><code>4.6_fresh_reviewer.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="4.4_check_and_retry.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="4.6_fresh_reviewer.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

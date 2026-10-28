@@ -14,6 +14,8 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "docs")
 ASSETS = os.path.join(ROOT, "site_assets")
 SITE_TITLE = "CCAF guide by Mihajlo Stojanovski"
+import time
+VER = str(int(time.time()))
 OFFICIAL_URL = "https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request"
 
 # id, name, emoji, colour, exam weight
@@ -29,7 +31,7 @@ AREAS = [
 AREA = {a[0]: a for a in AREAS}
 
 # Reading order = prev/next order.
-ORDER = ["layer1_THE_WHOLE_PICTURE.md"]
+ORDER = ["layer1_THE_WHOLE_PICTURE.md", "layer1_basics.md"]
 ORDER += sorted("layer2_areas/" + f for f in os.listdir(os.path.join(ROOT, "layer2_areas")) if f.endswith(".md"))
 for d in sorted(os.listdir(os.path.join(ROOT, "layer3_details"))):
     p = os.path.join(ROOT, "layer3_details", d)
@@ -117,7 +119,9 @@ def render(md, cur):
                 buf.append(lines[i])
                 i += 1
             i += 1
-            out.append("<pre><code>" + html.escape("\n".join(buf)) + "</code></pre>")
+            code = "\n".join(buf)
+            keep = re.search(r"[┌│├└─▼►◄▲]", code)  # diagrams keep their shape; code wraps on phones
+            out.append(f'<pre class="{"diagram" if keep else "wrap"}"><code>' + html.escape(code) + "</code></pre>")
             continue
 
         m = re.match(r"<details><summary>(.*?)</summary>(.*)</details>$", s)
@@ -313,16 +317,16 @@ def shell(out_rel, title, page_id, area, body, extra_body_attrs="", scripts=""):
 <title>{html.escape(title)} · {SITE_TITLE}</title>
 <meta name="description" content="{SITE_TITLE}: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 {FONT}
-<link rel="stylesheet" href="{root}/assets/site.css">
+<link rel="stylesheet" href="{root}/assets/site.css?v={VER}">
 </head>
 <body data-id="{html.escape(page_id)}" data-area="{area}" style="--a:{color}" {extra_body_attrs}>
 <div class="scrollbar"><i></i></div>
 {body}
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT={json.dumps(root)};</script>
-<script src="{root}/assets/data.js"></script>
+<script src="{root}/assets/data.js?v={VER}"></script>
 {scripts}
-<script src="{root}/assets/site.js"></script>
+<script src="{root}/assets/site.js?v={VER}"></script>
 </body></html>"""
 
 
@@ -333,7 +337,8 @@ def topbar(out_rel, area, timer_min=None, label=None):
             if a else "")
     timer = f'<button class="timer" data-min="{timer_min}" title="Focus timer (t)">⏱ <span>{timer_min}:00</span></button>' \
         if timer_min else ""
-    return (f'<header class="top"><a class="homebtn" href="{root}/index.html" title="Map (m)">🗺️</a>{pill}'
+    return (f'<header class="top"><a class="homebtn" href="{root}/index.html" title="Map (m)">🗺️</a>'
+            f'<a class="homebtn" href="{root}/glossary.html" title="Glossary (g)">📖</a>{pill}'
             f'<div class="dots" aria-label="Pages in this area"></div>{timer}</header>')
 
 
@@ -368,9 +373,9 @@ def chip(p):
             f'<span class="ck"></span>{num}<span>{html.escape(p["short"])}</span></a>')
 
 
-def index_page(n_cards):
+def index_page(n_cards, n_q):
     by = lambda a, k=None: [p for p in PAGES if p["area"] == a and (k is None or p["kind"] == k)]
-    l1 = by("L1")[0]
+    l1, basics = by("L1")[0], by("L1")[1]
     tiles = []
     for aid, name, emo, col, w in AREAS[1:6]:
         ov = by(aid, "overview")
@@ -390,7 +395,7 @@ def index_page(n_cards):
     how = render(read("00_HOW_TO_USE.md"), "00_HOW_TO_USE.md")
     body = f"""
 <header class="top home-top"><span class="brand">🧠 CCAF guide <small>by Mihajlo Stojanovski</small></span><div class="sp"></div>
-<a class="pill" href="flashcards.html">🃏 <span>Flashcards</span></a></header>
+<a class="pill" href="glossary.html">📖</a><a class="pill" href="quiz.html">🎯 <span>Quiz</span></a></header>
 <main class="home">
   <section class="hero">
     <div class="hero-txt">
@@ -399,6 +404,7 @@ def index_page(n_cards):
       <h1>See the whole picture.<br><span>Then zoom in, one small card at a time.</span></h1>
       <div class="ctas">
         <a class="cta" id="continue" href="{l1['href']}">▶ Start with the big picture</a>
+        <a class="cta ghost" href="quiz.html">🎯 Quiz &amp; mock exam <small>{n_q}</small></a>
         <a class="cta ghost" href="flashcards.html">🃏 Flashcards <small>{n_cards}</small></a>
       </div>
     </div>
@@ -409,10 +415,15 @@ def index_page(n_cards):
     <li class="step">
       <div class="step-n">1</div>
       <div class="step-body">
-        <h2>The whole picture <small>5 min</small></h2>
+        <h2>The whole picture <small>12 min</small></h2>
+        <div class="tiles two">
         <a class="tile wide" style="--a:{AREA['L1'][3]}" href="{l1['href']}" data-id="{l1['id']}">
           <span class="emo">🗺️</span><div class="tt"><h3>One page. The whole exam.</h3>
           <small>The one idea · 5 areas · 5 rules · 6 scenarios</small></div><span class="ck big"></span></a>
+        <a class="tile wide" style="--a:{AREA['L1'][3]}" href="{basics['href']}" data-id="{basics['id']}">
+          <span class="emo">🔧</span><div class="tt"><h3>How it works</h3>
+          <small>Messages · tools · the loop · where files live</small></div><span class="ck big"></span></a>
+        </div>
       </div>
     </li>
     <li class="step">
@@ -427,9 +438,17 @@ def index_page(n_cards):
       <div class="step-n">4</div>
       <div class="step-body">
         <h2>Practice <small>prove it</small></h2>
+        <div class="tiles three">
+          <a class="tile wide" style="--a:#fb7185" href="quiz.html#practice"><span class="emo">🎯</span>
+            <div class="tt"><h3>Practice by area</h3><small>{n_q} questions · instant explanations</small></div></a>
+          <a class="tile wide" style="--a:#fb7185" href="quiz.html#mock"><span class="emo">⏱️</span>
+            <div class="tt"><h3>Mock exam</h3><small>60 questions · 120 min · score per area</small></div></a>
+          <a class="tile wide" style="--a:#fb7185" href="flashcards.html"><span class="emo">🃏</span>
+            <div class="tt"><h3>Flashcards</h3><small>{n_cards} quick-recall cards</small></div></a>
+        </div>
         <section class="tile" id="area-L4" style="--a:{AREA['L4'][3]}" data-area="L4">
           <div class="tile-head"><span class="emo">🧪</span><div class="tt"><h3>Practice & the plan to 90%</h3>
-          <small>Exam traps · 16 questions · readiness plan</small></div>{ring("small", "L4")}</div>
+          <small>Exam traps · warm-up questions · build it yourself · plan</small></div>{ring("small", "L4")}</div>
           <div class="chips">{"".join(chip(p) for p in l4)}</div>
         </section>
       </div>
@@ -480,12 +499,106 @@ def flash_page(cards):
     return shell("flashcards.html", "Flashcards", "flashcards", "L4", body, 'class="is-flash"', script)
 
 
+def load_questions():
+    """Parse question_bank/*.txt. Block format:
+    @ D1 1.1 | Scenario / stem lines / '+ correct :: why' / '- wrong :: why', blocks split by '---'."""
+    task_href = {p["num"]: p["href"] for p in PAGES if p["num"]}
+    qs = []
+    qdir = os.path.join(ROOT, "question_bank")
+    for fn in sorted(os.listdir(qdir)):
+        if not fn.endswith(".txt"):
+            continue
+        text = "\n".join(l for l in open(os.path.join(qdir, fn), encoding="utf-8").read().split("\n")
+                         if not l.startswith("#"))
+        for n, block in enumerate(re.split(r"\n---\n", text)):
+            lines = [l for l in block.strip().split("\n") if l.strip()]
+            if not lines:
+                continue
+            m = re.match(r"@ (D\d) (\d\.\d) \| (.+)", lines[0])
+            assert m, (fn, lines[0])
+            stem, opts = [], []
+            for l in lines[1:]:
+                if l[:2] in ("+ ", "- "):
+                    txt, _, why = l[2:].partition(" :: ")
+                    assert why, (fn, l)
+                    opts.append({"t": inline(txt.strip(), "x.md"), "ok": l[0] == "+", "why": inline(why.strip(), "x.md")})
+                else:
+                    stem.append(l.strip())
+            n_ok = sum(o["ok"] for o in opts)
+            assert opts and n_ok >= 1 and len(opts) >= 4, (fn, lines[0])
+            qs.append({"id": f"{m.group(1)}-{fn[:2]}-{n}", "area": m.group(1), "task": m.group(2),
+                       "scenario": m.group(3).strip(), "stem": "<br>".join(inline(s, "x.md") for s in stem),
+                       "opts": opts, "multi": n_ok > 1, "href": task_href.get(m.group(2), "")})
+    return qs
+
+
+def glossary_page():
+    md = read("glossary.md")
+    body = topbar("glossary.html", "", None) + f'<main class="page">{render(md, "glossary.md")}</main>'
+    return shell("glossary.html", "Glossary", "glossary", "L1", body)
+
+
+def quiz_page(qs):
+    chips = "".join(
+        f'<button class="fchip" data-area="{a[0]}" style="--a:{a[3]}">{a[2]} {html.escape(a[1])}</button>'
+        for a in AREAS[1:6])
+    body = f"""
+{topbar("quiz.html", "", None)}
+<main class="quiz">
+  <section id="q-home">
+    <h1>🎯 Quiz &amp; mock exam</h1>
+    <p class="hint">{len(qs)} exam-style questions across all 30 topics and 6 scenarios. Every option is explained.</p>
+    <div class="stats" id="stats"></div>
+    <div class="modes-grid">
+      <div class="mode" id="practice">
+        <h2>🎯 Practice</h2><p>One question at a time. Instant explanation. Pick an area or mix them.</p>
+        <div class="filters"><button class="fchip on" data-area="all" style="--a:#e9e7e2">All areas</button>{chips}</div>
+        <div class="row"><label class="tog"><input type="checkbox" id="weakOnly"> Only unseen &amp; missed</label>
+        <select id="qCount"><option value="10">10 questions</option><option value="20" selected>20 questions</option><option value="999">All</option></select></div>
+        <button class="cta" id="startPractice">Start practice</button>
+      </div>
+      <div class="mode" id="mock">
+        <h2>⏱️ Mock exam</h2><p>60 questions weighted like the real exam (27/18/20/20/15%), 120 minutes, no feedback until the end. Score per area.</p>
+        <button class="cta" id="startMock">Start mock exam</button>
+        <p class="small" id="mockBest"></p>
+      </div>
+      <div class="mode" id="mistakes">
+        <h2>🔁 My mistakes</h2><p>Questions you last answered wrong. Clear them all to lock the knowledge in.</p>
+        <button class="cta ghost" id="startMistakes">Review mistakes</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="q-run" hidden>
+    <div class="qbar"><div class="qprog"><i></i></div><span class="qcount"></span><span class="qtimer" hidden></span></div>
+    <div class="qcard">
+      <div class="qmeta"></div>
+      <div class="qstem"></div>
+      <div class="qhint"></div>
+      <div class="qopts"></div>
+      <div class="qfeedback" hidden></div>
+    </div>
+    <div class="qbtns">
+      <button class="cta ghost" id="qPrev">←</button>
+      <button class="cta ghost" id="qFlag">🚩 Flag</button>
+      <button class="cta" id="qMain">Check</button>
+    </div>
+    <div class="palette" hidden></div>
+    <p class="small center"><button class="linkbtn" id="qQuit">Quit</button></p>
+  </section>
+
+  <section id="q-result" hidden></section>
+</main>"""
+    script = f"<script>window.QUESTIONS={json.dumps(qs, ensure_ascii=False)};</script>"
+    return shell("quiz.html", "Quiz & mock exam", "quiz", "L4", body, 'class="is-quiz"', script + f'<script src="assets/quiz.js?v={VER}"></script>')
+
+
 def build():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, "assets"))
     open(os.path.join(OUT, ".nojekyll"), "w").close()
-    for f in ("site.css", "site.js"):
+    for f in ("site.css", "site.js", "quiz.js"):
         shutil.copy(os.path.join(ASSETS, f), os.path.join(OUT, "assets", f))
     data = {"pages": PAGES, "areas": {a[0]: {"name": a[1], "emoji": a[2], "color": a[3], "weight": a[4]} for a in AREAS}}
     with open(os.path.join(OUT, "assets", "data.js"), "w", encoding="utf-8") as f:
@@ -500,9 +613,14 @@ def build():
     cards = flashcards()
     with open(os.path.join(OUT, "flashcards.html"), "w", encoding="utf-8") as f:
         f.write(flash_page(cards))
+    qs = load_questions()
+    with open(os.path.join(OUT, "quiz.html"), "w", encoding="utf-8") as f:
+        f.write(quiz_page(qs))
+    with open(os.path.join(OUT, "glossary.html"), "w", encoding="utf-8") as f:
+        f.write(glossary_page())
     with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
-        f.write(index_page(len(cards)))
-    print(f"Built {len(PAGES)} pages + map + {len(cards)} flashcards into {OUT}")
+        f.write(index_page(len(cards), len(qs)))
+    print(f"Built {len(PAGES)} pages + map + {len(cards)} flashcards + {len(qs)} questions into {OUT}")
 
 
 if __name__ == "__main__":

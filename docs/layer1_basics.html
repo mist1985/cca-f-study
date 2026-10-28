@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<title>🔧 Layer 1 · How it works (the basics) · CCAF guide by Mihajlo Stojanovski</title>
+<meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/site.css?v=1793185828">
+</head>
+<body data-id="layer1_basics.md" data-area="L1" style="--a:#fb923c" data-prev="layer1_THE_WHOLE_PICTURE.html" data-next="layer2_areas/1_agents.html">
+<div class="scrollbar"><i></i></div>
+<header class="top"><a class="homebtn" href="./index.html" title="Map (m)">🗺️</a><a class="homebtn" href="./glossary.html" title="Glossary (g)">📖</a><a class="pill" href="./index.html#area-L1">🗺️ <span>The whole picture</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="7" title="Focus timer (t)">⏱ <span>7:00</span></button></header><main class="page kind-big-picture"><div class="kind">big picture</div><h1>🔧 Layer 1 · How it works (the basics)</h1>
+<p class="crumb">📍 <strong>Map:</strong> Whole picture → <strong>How the parts talk to each other</strong>  ·  ⏱ 7 min</p>
+<p>You don't need to be a programmer for this exam. You need to <strong>recognize</strong> a few shapes. This page shows each one once.</p>
+<hr>
+<h2>1. Your program talks to Claude by sending messages</h2>
+<blockquote class="rule">Claude <strong>remembers nothing</strong> between calls. Your program sends the <strong>whole conversation</strong> every time.</blockquote>
+<pre class="wrap"><code>{
+  &quot;model&quot;: &quot;claude-...&quot;,
+  &quot;system&quot;: &quot;You are Brewly&#x27;s support agent.&quot;,
+  &quot;messages&quot;: [
+    {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Where is my order 4821?&quot;}
+  ]
+}</code></pre>
+<ul><li><code>system</code> = standing instructions (the <strong>system prompt</strong>).</li><li><code>messages</code> = the conversation, oldest first.</li><li><code>&quot;role&quot;: &quot;user&quot;</code> = your side. <code>&quot;role&quot;: &quot;assistant&quot;</code> = Claude.</li></ul>
+<hr>
+<h2>2. You give Claude tools (Claude can only <em>ask</em> to use them)</h2>
+<pre class="wrap"><code>{
+  &quot;name&quot;: &quot;lookup_order&quot;,
+  &quot;description&quot;: &quot;Looks up one order by its ID (format ORD-12345). Use for status, items, delivery date. Does NOT return payment info; use get_payments for that.&quot;,
+  &quot;input_schema&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: { &quot;order_id&quot;: {&quot;type&quot;: &quot;string&quot;} },
+    &quot;required&quot;: [&quot;order_id&quot;]
+  }
+}</code></pre>
+<ul><li><code>description</code> = what Claude reads to decide <strong>whether</strong> to use it (→ card 2.1).</li><li><code>input_schema</code> = a <strong>JSON schema</strong>: which inputs, what type, which are required.</li></ul>
+<hr>
+<h2>3. Claude asks for a tool → your code runs it → you send the result back</h2>
+<p>Claude replies:</p>
+<pre class="wrap"><code>{&quot;stop_reason&quot;: &quot;tool_use&quot;,
+ &quot;content&quot;: [{&quot;type&quot;: &quot;tool_use&quot;, &quot;id&quot;: &quot;toolu_01&quot;, &quot;name&quot;: &quot;lookup_order&quot;,
+              &quot;input&quot;: {&quot;order_id&quot;: &quot;ORD-4821&quot;}}]}</code></pre>
+<p>Your program runs the real lookup and answers:</p>
+<pre class="wrap"><code>{&quot;role&quot;: &quot;user&quot;,
+ &quot;content&quot;: [{&quot;type&quot;: &quot;tool_result&quot;, &quot;tool_use_id&quot;: &quot;toolu_01&quot;,
+              &quot;content&quot;: &quot;Shipped yesterday, arrives Friday.&quot;}]}</code></pre>
+<ul><li><code>stop_reason: &quot;tool_use&quot;</code> = "I'm waiting for a tool answer".</li><li><code>tool_use_id</code> = matches the request's <code>id</code>.</li><li>When Claude is finished: <code>stop_reason: &quot;end_turn&quot;</code>.</li></ul>
+<p><strong>That back-and-forth, repeated, is the agent loop</strong> (→ card 1.1).</p>
+<hr>
+<h2>4. The 4 products the exam is about</h2>
+<div class="tw"><table><thead><tr><th>Product</th><th>What it is</th><th>Where you meet it</th></tr></thead><tbody><tr><td><strong>Claude API</strong></td><td>Send messages, get replies (above)</td><td>Areas 1, 4</td></tr><tr><td><strong>Claude Agent SDK</strong></td><td>A toolkit that runs the loop for you, plus helpers (subagents) and hooks</td><td>Area 1</td></tr><tr><td><strong>MCP</strong></td><td>A standard "plug" that gives Claude tools from other systems</td><td>Area 2</td></tr><tr><td><strong>Claude Code</strong></td><td>Claude working inside a code project: reads/edits files, runs commands</td><td>Area 3</td></tr></tbody></table></div>
+<hr>
+<h2>5. Where things live in a Claude Code project</h2>
+<pre class="diagram"><code>my-project/
+├── CLAUDE.md                ← team instructions (always loaded)
+├── .mcp.json                ← team MCP servers
+└── .claude/
+    ├── rules/testing.md     ← loads only for matching files
+    ├── commands/review.md   ← team slash command /review
+    └── skills/deploy/SKILL.md ← on-demand skill /deploy
+
+~/.claude/CLAUDE.md          ← only YOU (never shared)
+~/.claude.json               ← your personal MCP servers</code></pre>
+<p><strong>Rule of thumb:</strong> inside the project folder = shared with the team via git. <code>~/</code> = only you.</p>
+<hr>
+<h2>6. The one idea again</h2>
+<div class="tw"><table><thead><tr><th>🧠 Claude</th><th>🔒 Code</th><th>🙋 Humans</th></tr></thead><tbody><tr><td>thinks, chooses, writes</td><td>enforces rules that must never break</td><td>handles exceptions</td></tr></tbody></table></div>
+<p>✅ <strong>Done when</strong> you can explain sections 1–3 to an imaginary friend.</p>
+<p class="nextline">➡️ Next: <a href="layer2_areas/1_agents.html"><code>layer2_areas/1_agents.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="layer1_THE_WHOLE_PICTURE.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="./index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="layer2_areas/1_agents.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
+<div class="toast" role="status" aria-live="polite"></div>
+<script>window.ROOT=".";</script>
+<script src="./assets/data.js?v=1793185828"></script>
+
+<script src="./assets/site.js?v=1793185828"></script>
+</body></html>

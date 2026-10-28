@@ -6,11 +6,11 @@
 <title>2.3 · Who gets which tools + tool_choice · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D2_tools/2.3_who_gets_which_tools.md" data-area="D2" style="--a:#22d3ee" data-prev="2.2_errors.html" data-next="2.4_mcp_for_a_team.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.3</span> Who gets which tools + <code>tool_choice</code></h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D2">🧰 <span>Tools &amp; MCP</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">2.3</span> Who gets which tools + <code>tool_choice</code></h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 2. Tools → <strong>2.3 Who gets which tools</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>Each agent gets only the tools its job needs.</strong> Fewer tools = better choices.</blockquote>
@@ -21,6 +21,22 @@
 <h2><code>tool_choice</code> (memorize this table)</h2>
 <div class="tw"><table><thead><tr><th>Setting</th><th>Means</th></tr></thead><tbody><tr><td><code>&quot;auto&quot;</code></td><td>Claude <em>may</em> call a tool, or just reply in text</td></tr><tr><td><code>&quot;any&quot;</code></td><td>Claude <strong>must</strong> call a tool (any one)</td></tr><tr><td><code>{&quot;type&quot;:&quot;tool&quot;,&quot;name&quot;:&quot;x&quot;}</code></td><td>Claude <strong>must</strong> call tool <strong>x</strong></td></tr></tbody></table></div>
 <ul><li><code>&quot;any&quot;</code> → guarantees a tool call instead of a chatty text reply.</li><li>Forced tool → makes sure <strong>one specific tool runs first</strong> (e.g. <code>extract_metadata</code> before enrichment). Later steps go in the next turns.</li></ul>
+<h2>👀 What it looks like</h2>
+<pre class="wrap"><code>agents = {
+  &quot;web_search&quot;: AgentDefinition(..., tools=[&quot;web_search&quot;, &quot;load_document&quot;]),
+  &quot;synthesis&quot;:  AgentDefinition(..., tools=[&quot;verify_fact&quot;]),   # small scoped tool only
+}</code></pre>
+<pre class="wrap"><code># Must run extract_metadata first, then enrichment in later turns:
+client.messages.create(..., tools=TOOLS,
+    tool_choice={&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;extract_metadata&quot;})
+
+# Several schemas, unknown document type → must call SOME extraction tool:
+client.messages.create(..., tools=[extract_invoice, extract_receipt, extract_contract],
+    tool_choice={&quot;type&quot;: &quot;any&quot;})</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Each agent's <code>tools</code> = only its job.</li><li><code>verify_fact</code> covers the frequent simple case. Deep checks still go through the coordinator.</li><li>Forced tool = <strong>order</strong> guaranteed for that turn. <code>any</code> = <strong>some</strong> tool guaranteed, no plain text.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>1.3 (AgentDefinition) · 4.3 (tool_choice for structured output) · 2.1 (tool overlap)</p>
 <h2>⚠️ Exam traps (this is sample question #9)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Give the synthesis agent all web tools</td><td>A scoped <code>verify_fact</code> tool (85% case)</td></tr><tr><td><code>auto</code> guarantees a tool call</td><td>Only <code>any</code> or forced do</td></tr></tbody></table></div>
 <details class="bonus"><summary>🔬 Real-world note (NOT the exam answer)</summary><div class="ans">
@@ -32,7 +48,7 @@
 <p class="nextline">➡️ Next: <a href="2.4_mcp_for_a_team.html"><code>2.4_mcp_for_a_team.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="2.2_errors.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="2.4_mcp_for_a_team.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

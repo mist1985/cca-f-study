@@ -6,11 +6,11 @@
 <title>5.2 · When to call a human · CCAF guide by Mihajlo Stojanovski</title>
 <meta name="description" content="CCAF guide by Mihajlo Stojanovski: a layered, ADHD-friendly study map for the Claude Certified Architect – Foundations exam.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/site.css?v=1793185828">
 </head>
 <body data-id="layer3_details/D5_over_time/5.2_when_to_call_a_human.md" data-area="D5" style="--a:#f472b6" data-prev="5.1_keep_exact_facts.html" data-next="5.3_honest_failures.html">
 <div class="scrollbar"><i></i></div>
-<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="pill" href="../../index.html#area-D5">⏳ <span>Over time</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">5.2</span> When to call a human</h1>
+<header class="top"><a class="homebtn" href="../../index.html" title="Map (m)">🗺️</a><a class="homebtn" href="../../glossary.html" title="Glossary (g)">📖</a><a class="pill" href="../../index.html#area-D5">⏳ <span>Over time</span></a><div class="dots" aria-label="Pages in this area"></div><button class="timer" data-min="3" title="Focus timer (t)">⏱ <span>3:00</span></button></header><main class="page kind-card"><div class="kind">card</div><h1><span class="num">5.2</span> When to call a human</h1>
 <p class="crumb">📍 <strong>Map:</strong> Whole picture → 5. Over time → <strong>5.2 Escalation</strong>  ·  ⏱ 3 min</p>
 <h2>The one rule</h2>
 <blockquote class="rule"><strong>3 good reasons</strong> to escalate. <strong>Mood and Claude's confidence are not reasons.</strong></blockquote>
@@ -20,6 +20,22 @@
 <ul><li>❌ <strong>Sentiment</strong> (angry ≠ complex).</li><li>❌ <strong>Self-reported confidence</strong> (Claude is confidently wrong on hard cases).</li></ul>
 <h2>Nuances 🎯</h2>
 <ul><li>Customer <strong>frustrated</strong> but the issue is easy → <strong>acknowledge the feeling, offer to fix it</strong>. Escalate if they <strong>ask again</strong>.</li><li>Customer <strong>explicitly demands</strong> a human → escalate right away.</li><li><strong>Several customers match</strong> → ask for another identifier (email, order number). Never guess.</li><li>First fix for bad escalation: <strong>explicit criteria + few-shot examples in the system prompt.</strong> Not a classifier.</li></ul>
+<h2>👀 What it looks like</h2>
+<p>In the system prompt:</p>
+<pre class="wrap"><code>Escalate to a human (escalate_to_human) when ANY of these is true:
+1. The customer asks for a human. Do it immediately; don&#x27;t troubleshoot first.
+2. The request isn&#x27;t covered by policy (e.g. competitor price matching;
+   our policy covers only our own price drops).
+3. You can&#x27;t make progress (tools failing, missing access).
+Do NOT escalate just because the customer is upset: acknowledge it, then solve.
+If the customer repeats that they want a human, escalate.
+
+&lt;example&gt;&quot;Your app is useless, where&#x27;s my parcel??&quot; → acknowledge, lookup_order, resolve.&lt;/example&gt;
+&lt;example&gt;&quot;Amazon has it 20% cheaper, match it.&quot; → policy gap → escalate.&lt;/example&gt;</code></pre>
+<p><strong>Piece by piece</strong></p>
+<ul><li>Explicit triggers + examples = the proportionate <strong>first fix</strong>.</li><li>Frustration alone ≠ escalate. <strong>Explicit request</strong> = escalate.</li></ul>
+<h2>🧩 Connects to</h2>
+<p>1.4 (structured handoff) · 4.2 (few-shot) · 2.1 (multiple matches → ask)</p>
 <h2>⚠️ Exam traps (this is sample question #3)</h2>
 <div class="tw"><table class="traps"><thead><tr><th>❌ Wrong</th><th>✅ Right</th></tr></thead><tbody><tr><td>Confidence score 1–10 with a threshold</td><td>Not calibrated</td></tr><tr><td>Train a separate classifier</td><td>Over-engineered as a first step</td></tr><tr><td>Sentiment threshold</td><td>Mood ≠ complexity</td></tr><tr><td>✅</td><td>Explicit criteria + few-shot examples</td></tr></tbody></table></div>
 <details class="quiz"><summary>🧠 Say it out loud: name the 3 triggers.</summary><div class="ans">
@@ -28,7 +44,7 @@
 <p class="nextline">➡️ Next: <a href="5.3_honest_failures.html"><code>5.3_honest_failures.md</code></a></p></main><nav class="bottom"><a class="nb prev" href="5.1_keep_exact_facts.html" title="Previous (←)"><b>←</b><small>Prev</small></a><a class="nb" href="../../index.html" title="Map (m)"><b>🗺️</b><small>Map</small></a><button class="nb done-btn" title="Mark done (d)"><b>⬜</b><small>Done?</small></button><a class="nb next" href="5.3_honest_failures.html" title="Next (→)"><b>→</b><small>Next</small></a></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.ROOT="../..";</script>
-<script src="../../assets/data.js"></script>
+<script src="../../assets/data.js?v=1793185828"></script>
 
-<script src="../../assets/site.js"></script>
+<script src="../../assets/site.js?v=1793185828"></script>
 </body></html>

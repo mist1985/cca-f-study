@@ -1,0 +1,243 @@
+# Format: "@ AREA TASK | Scenario", stem lines, then options:
+#   "+ text :: why"  = correct      "- text :: why" = wrong
+# Blocks are separated by a line with only "---".
+
+@ D1 1.1 | Customer support
+Your support agent's loop sometimes ends before it has called process_refund, even though the customer clearly asked for a refund. The loop currently stops whenever the response contains any text. What should the loop check instead?
++ Whether stop_reason is "tool_use" (continue) or "end_turn" (stop) :: stop_reason is the reliable signal. Claude can write text and request a tool in the same response.
+- Whether the text contains words like "done" or "complete" :: Parsing natural language is unreliable and is an anti-pattern the exam names explicitly.
+- Whether 3 iterations have passed :: A fixed cap as the main stop cuts off longer tasks. Caps are only a safety net.
+- Whether the last message is longer than 50 characters :: Message length says nothing about whether Claude still needs a tool.
+---
+@ D1 1.1 | Developer productivity
+A developer builds an agent and hard-codes the order: always call search_code, then read_file, then summarize. On unfamiliar repos it often reads the wrong files. What is the best change?
++ Give Claude the tools and let it decide the next call from the results so far (model-driven) :: The point of an agent is that Claude reasons about which tool to call next based on what it has learned.
+- Add more steps to the fixed sequence :: A longer fixed tree still can't adapt to what each repo needs.
+- Ask the user to choose each tool :: That removes the agent's value and adds friction.
+- Parse Claude's text for file names and read them all :: Text parsing is brittle, and reading everything floods the context.
+---
+@ D1 1.1 | Customer support
+After running a tool, the developer sends the next request without adding the tool's output to the messages. What happens?
++ Claude can't use the result, because it only knows what's in the messages it receives :: Claude has no memory between calls. Tool results must be appended to the history.
+- Claude remembers the result from the previous call :: The API is stateless. Nothing is remembered between requests.
+- The SDK automatically caches the tool output inside the model :: There's no hidden memory. The conversation you send is all Claude sees.
+- Claude will re-run the tool by itself :: Claude can't run tools. It can only ask, and your code runs them.
+---
+@ D1 1.1 | Multi-agent research
+Which approach does the exam treat as the PRIMARY way to end an agentic loop?
++ The response's stop_reason is "end_turn" :: This is the designed completion signal.
+- A maximum iteration count is reached :: That's a backstop for runaway loops, not the normal ending.
+- The assistant's message contains no tool request and some text :: Checking for assistant text is a listed anti-pattern. Use stop_reason.
+- A regular expression finds "FINAL ANSWER" :: Natural-language parsing is unreliable.
+---
+@ D1 1.2 | Multi-agent research
+A coordinator always runs all 5 subagents (search, documents, statistics, legal, synthesis) for every query, even "What year was the company founded?". Costs are high. What should change?
++ The coordinator should analyze each query and pick only the subagents it needs :: Selecting subagents by query complexity is a core coordinator responsibility.
+- Remove the coordinator and let subagents decide among themselves :: Without a hub you lose observability and consistent routing.
+- Run all 5 subagents but with a cheaper model :: Still wasteful. Simple queries don't need the full pipeline.
+- Cache every subagent's output forever :: It doesn't address why unnecessary agents run in the first place.
+---
+@ D1 1.2 | Multi-agent research
+Two search subagents keep returning the same articles about "electric vehicle adoption", wasting tokens. Best fix?
++ Partition the scope: give each subagent distinct subtopics or source types :: Clear partitioning minimizes duplicated work.
+- Let the two subagents message each other to avoid overlap :: Hub-and-spoke routes communication through the coordinator. Peer chat loses oversight.
+- Merge them into one huge subagent :: That loses parallelism, and one agent may drown in material.
+- Tell both subagents to "avoid duplicates" :: They can't see each other's work, so the instruction can't be followed.
+---
+@ D1 1.2 | Multi-agent research
+After synthesis, the coordinator notices the report has no information about regulations. What is the recommended pattern?
++ Evaluate the synthesis for gaps, delegate targeted research on regulations, then re-run synthesis :: An iterative refinement loop is how coordinators reach sufficient coverage.
+- Publish the report as-is, because the subagents finished successfully :: Finishing isn't the same as covering the topic. The coordinator checks for gaps.
+- Ask the synthesis agent to invent a reasonable regulations section :: That fabricates content.
+- Restart the whole pipeline from scratch :: Wasteful. A targeted re-delegation fixes the gap.
+---
+@ D1 1.2 | Multi-agent research
+Why does the hub-and-spoke pattern route ALL subagent communication through the coordinator?
++ Observability, consistent error handling, and controlled information flow :: These are the reasons the guide gives.
+- It makes the system faster than direct messaging :: Routing through a hub isn't about speed. It can even add a step.
+- Subagents are unable to produce structured output :: Unrelated. Subagents can produce structured output.
+- It lowers the price per token :: The pattern is about control and visibility, not token price.
+---
+@ D1 1.2 | Multi-agent research
+A report on "remote work's effect on cities" covers only housing prices. Logs show the coordinator created subtasks: "rent trends", "home prices", "mortgage rates". Every subagent did its job well. Root cause?
++ The coordinator's decomposition was too narrow and missed transport, retail, office use, etc. :: The subagents only research what they're assigned. The gap comes from the split.
+- The search subagent's queries were too short :: It searched exactly what it was told to search.
+- The synthesis agent dropped non-housing findings :: There were no non-housing findings to drop.
+- The model's context window was too small :: Nothing indicates a context problem. The assignment itself was narrow.
+---
+@ D1 1.3 | Multi-agent research
+The synthesis subagent keeps writing reports that ignore the web results the search subagent found. What's the most likely cause?
++ The coordinator didn't include the search findings in the synthesis subagent's prompt :: Subagents don't inherit context. Findings must be passed explicitly.
+- The synthesis subagent needs a larger context window :: Size isn't the issue. It never received the data.
+- Subagents share memory, but it's being cleared too quickly :: Subagents don't share memory at all.
+- The search subagent should write its results into the synthesis subagent's system prompt directly :: Subagents don't talk to each other. The coordinator routes data.
+---
+@ D1 1.3 | Multi-agent research
+A coordinator built with the Agent SDK never starts any subagents, even when it should. Its configuration lists tools Read, Grep and WebSearch. What's missing?
++ "Task" in the coordinator's allowedTools :: The Task tool is how a coordinator spawns subagents.
+- A "spawn: true" flag in each subagent's prompt :: No such flag. Delegation needs the Task tool.
+- An MCP server for each subagent :: Subagents are not MCP servers.
+- A higher max_tokens value :: Token limits don't enable delegation.
+---
+@ D1 1.3 | Multi-agent research
+You want three independent research subagents to run at the same time. How should the coordinator do it?
++ Emit three Task tool calls in a single response :: Several Task calls in one response run in parallel.
+- Emit one Task call per turn, three turns in a row :: That runs them one after another.
+- Ask the first subagent to start the other two :: Subagents don't coordinate each other. The hub delegates.
+- Use the Batch API for the three subagents :: Batch is for asynchronous bulk jobs, not live agent orchestration.
+---
+@ D1 1.3 | Multi-agent research
+Final reports lose track of which document each claim came from. How should context be passed between agents?
++ Use a structured format that keeps content separate from metadata such as source URL, document name and page :: Structured content + metadata keeps attribution through the pipeline.
+- Concatenate all findings into one paragraph to save tokens :: Merging text destroys the claim-source link.
+- Pass only the URLs and let synthesis re-fetch everything :: Wasteful, and it doesn't help preserve claim-level attribution.
+- Tell the synthesis agent to "remember to cite sources" :: It can't cite what it was never given.
+---
+@ D1 1.3 | Multi-agent research
+How should a coordinator write the prompt for a research subagent?
++ State the research goal and quality criteria, and let the subagent decide how to get there :: Goals + criteria let a subagent adapt. Rigid steps break on unexpected material.
+- List exact step-by-step instructions for every search :: Overly procedural prompts stop the subagent adapting.
+- Give only a one-word topic so the subagent stays creative :: Too little context. The subagent doesn't know scope or quality bar.
+- Paste the coordinator's whole conversation history :: Usually noisy. Pass the relevant findings and criteria explicitly.
+---
+@ D1 1.3 | Code generation
+You want to explore two different refactoring approaches starting from the same analysis of the codebase, without the two attempts affecting each other. What fits best?
++ Fork-based session management, branching from the shared analysis :: Forking creates independent branches from a shared baseline.
+- Run both approaches in the same session, one after the other :: The second attempt is biased by the first.
+- Start two fresh sessions with no context :: You lose the shared analysis you want to start from.
+- Ask one session to "pretend" it didn't see the first approach :: The context is still there. Pretending doesn't isolate.
+---
+@ D1 1.4 | Customer support
+Compliance requires that identity is verified before ANY refund. In testing, the agent skips verification about 3% of the time despite a clear system prompt rule. Best fix?
++ A programmatic prerequisite that blocks process_refund until get_customer has returned a verified customer ID :: Deterministic enforcement is needed when compliance is mandatory.
+- Rewrite the rule in capitals and repeat it at the end of the prompt :: Still probabilistic. Prompts have a non-zero failure rate.
+- Add few-shot examples of verifying first :: Helpful but not a guarantee.
+- Lower the temperature to 0 :: It doesn't make instruction-following deterministic.
+---
+@ D1 1.4 | Customer support
+The agent must escalate a complicated billing dispute to a human agent, who can't see the conversation. What should it send?
++ A structured summary: customer ID, root cause, amounts involved, what was tried, recommended action :: The human can act right away without the transcript.
+- The full conversation transcript :: Too long. The human has to dig for the key facts.
+- "Customer has a billing issue, please help" :: Too vague to act on.
+- Only the customer's last message :: Loses all the investigation already done.
+---
+@ D1 1.4 | Customer support
+A customer writes: "My order 4821 is late, I was charged twice, and I want to change my address." What should the agent do?
++ Split it into 3 items, investigate them in parallel with shared context, then give one combined answer :: That's how the guide describes handling multi-concern requests.
+- Handle only the first issue and ask the customer to write again for the others :: That annoys the customer and is inefficient.
+- Escalate immediately because there are multiple issues :: Several issues don't mean a policy gap or a stuck agent.
+- Answer all three from memory without tools :: It would guess facts that need lookups.
+---
+@ D1 1.4 | Customer support
+Which TWO statements about enforcing workflow order are correct? (Choose 2)
++ Prompt instructions alone have a non-zero failure rate for required sequences :: That's why they aren't enough for mandatory steps.
++ Hooks or prerequisite gates give deterministic enforcement :: Code runs the same check every time.
+- Forcing tool_choice to a specific tool guarantees the whole multi-step order :: It forces one call in one turn. It doesn't enforce prerequisites across steps.
+- Few-shot examples make ordering deterministic :: Examples improve consistency but stay probabilistic.
+- A classifier that limits available tools enforces ordering :: It controls which tools exist, not the order they're used in.
+---
+@ D1 1.5 | Customer support
+Three MCP tools return dates as a Unix timestamp, ISO 8601, and "20/10/2026". The agent sometimes compares them wrongly. Best fix?
++ A PostToolUse hook that converts all dates to one format before the agent sees them :: Normalizing in a hook is deterministic and happens before Claude reasons.
+- A system prompt asking Claude to convert dates carefully :: Probabilistic, and Claude may still slip.
+- Ask each vendor to change their API :: Not under your control, and slow.
+- A PreToolUse hook that converts the dates :: Before the tool runs, there's no result to convert yet.
+---
+@ D1 1.5 | Customer support
+Policy: refunds above $500 need a manager. How should the agent enforce this?
++ A hook that intercepts process_refund calls above $500, blocks them and redirects to human escalation :: Interception guarantees compliance and offers the alternative path.
+- A PostToolUse hook that reverses refunds above $500 :: Too late. The money already moved.
+- A sentence in the system prompt :: Not guaranteed.
+- Ask Claude for its confidence before each refund :: Confidence isn't a policy control.
+---
+@ D1 1.5 | Customer support
+When should you choose a hook over a prompt instruction?
++ When a business rule requires guaranteed compliance :: Hooks are deterministic. Prompts are probabilistic.
+- Whenever you want Claude to sound more polite :: Tone is a prompt matter, not a hook matter.
+- Only for logging, never for blocking :: Hooks can block calls and change results.
+- Never, because hooks slow the agent down :: Hooks are the recommended tool for guarantees.
+---
+@ D1 1.5 | Developer productivity
+An MCP tool returns status codes 1, 2 and 3. The agent misreads them. What's the cleanest fix?
++ A PostToolUse hook that maps the codes to labels ("pending", "shipped", "delivered") :: The model then sees clear, consistent data.
+- Add a table of codes to every user message :: Wastes tokens, and Claude can still misread it.
+- A PreToolUse hook that changes the codes :: The codes only exist after the tool runs.
+- Ask the agent to guess from context :: Unreliable.
+---
+@ D1 1.6 | CI/CD
+Every pull request needs the same review: style check, then security check, then a summary. Which decomposition fits?
++ Prompt chaining: a fixed sequence of focused steps :: Predictable steps → a fixed pipeline is simpler and more reliable.
+- A fully autonomous agent that decides its own steps each time :: Unnecessary when the steps are known in advance.
+- Dynamic decomposition that maps the codebase first :: That's for open-ended investigations.
+- One giant prompt asking for everything at once :: Risks shallow coverage. Focused steps work better.
+---
+@ D1 1.6 | Developer productivity
+"Add comprehensive tests to this 10-year-old codebase nobody understands." Which approach fits?
++ Map the structure, find high-impact areas, make a prioritized plan, and adapt it as you discover dependencies :: Open-ended work needs adaptive decomposition.
+- A fixed pipeline: one test file per source file in alphabetical order :: Ignores risk and dependencies.
+- Generate all tests in one pass :: Attention dilution, plus no prioritization.
+- Ask for 100% coverage before reading any code :: There's no plan grounded in the code.
+---
+@ D1 1.6 | CI/CD
+A review of a 25-file PR gives detailed feedback on the first files, shallow comments on the last ones, and contradictory verdicts on identical code. What's the best fix?
++ Per-file review passes plus a separate cross-file integration pass :: Fixes attention dilution and still catches issues between files.
+- Use a model with a larger context window :: A bigger window doesn't fix attention quality.
+- Run the full review three times and keep issues found at least twice :: Consensus would suppress real bugs that are caught only sometimes.
+- Ask developers to keep PRs under 5 files :: That shifts the burden instead of fixing the system.
+---
+@ D1 1.7 | Developer productivity
+Yesterday you ran a long investigation session named "auth-audit". Today you want to continue it with all its context. What do you use?
++ claude --resume auth-audit :: Named session resumption continues a specific prior conversation.
+- claude --new auth-audit :: Not the way to continue a session.
+- Paste yesterday's notes into a brand new session every time :: Possible, but resume is the direct tool when the context is still valid.
+- fork_session from an empty session :: Forking branches existing context. It doesn't restore yesterday's.
+---
+@ D1 1.7 | Code generation
+You resume a session, but over the weekend a teammate rewrote 2 of the 40 files the session had analyzed. Best approach?
++ Resume, and tell the session exactly which 2 files changed so it re-analyzes just those :: Targeted re-analysis is efficient, and the rest of the context is still valid.
+- Resume and say nothing; the model will notice :: Its old tool results are stale and will mislead it.
+- Delete the session and re-explore all 40 files :: Unnecessary when most of the context is still valid.
+- Fork the session to undo the teammate's changes :: Forks branch the conversation. They don't change files.
+---
+@ D1 1.7 | Code generation
+A major refactor changed most of the files a long session had analyzed. What's the most reliable way to continue?
++ Start a new session and inject a structured summary of the earlier findings :: Stale tool results would mislead. A fresh start with a summary is more reliable.
+- Resume the old session as-is :: Most of its tool results are stale.
+- Resume and ask Claude to "ignore anything outdated" :: It can't tell which results are stale.
+- Fork the old session :: The fork inherits the same stale context.
+---
+@ D1 1.2 | Customer support
+In a hub-and-spoke system, a billing subagent hits an error it can't resolve. Where should that error go?
++ Back to the coordinator, which decides how to recover :: The hub owns error handling and routing.
+- Directly to the refund subagent so it can compensate :: Peer-to-peer routing bypasses oversight.
+- Nowhere: the subagent should silently skip the step :: Suppressing errors is an anti-pattern.
+- Straight to the end customer :: The coordinator decides what to tell the customer.
+---
+@ D1 1.3 | Multi-agent research
+What does a subagent automatically receive from its coordinator when it's spawned?
++ Nothing beyond what the coordinator writes into its prompt (plus its own definition) :: Subagents run with isolated context.
+- The coordinator's full conversation history :: Subagents don't inherit history.
+- The coordinator's tool results so far :: Not shared automatically.
+- A shared memory store with all other subagents :: There's no shared memory between invocations.
+---
+@ D1 1.4 | Customer support
+Which TWO items belong in a structured handoff summary for a human agent? (Choose 2)
++ Root cause analysis of the issue :: The human needs to know what went wrong.
++ A recommended next action :: It lets the human act immediately.
+- The raw JSON of every tool call :: Too noisy for a human handoff.
+- The agent's confidence score as the main content :: Not actionable, and confidence is poorly calibrated.
+- An apology template for the customer :: Not the core of a handoff.
+---
+@ D1 1.1 | Customer support
+Claude returns a response with both a short sentence ("Let me check that order.") and a tool_use block. What should the loop do?
++ Run the tool, add the result, and continue, because stop_reason is "tool_use" :: Text alongside a tool call doesn't mean it's finished.
+- Stop, because Claude produced text :: That's the "assistant text = done" anti-pattern.
+- Show the text to the user and wait for them to reply :: Claude is mid-task, waiting for a tool result.
+- Discard the tool call and ask Claude to rephrase :: There's nothing wrong with the response.
+---
+@ D1 1.6 | Multi-agent research
+When should you NOT add subagents to a workflow?
++ For small, sequential tasks that share state, where doing it directly is simpler :: Subagents add cost and coordination overhead.
+- When the task has several independent research directions :: That's exactly where parallel subagents help.
+- When verbose exploration would flood the main context :: Subagents are good at isolating that.
+- When you need different tool sets for different parts :: Scoped subagents fit that well.

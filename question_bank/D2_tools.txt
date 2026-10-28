@@ -1,0 +1,196 @@
+@ D2 2.1 | Customer support
+The agent often calls check_account when users ask about deliveries, instead of track_shipment. Both descriptions are one short line. What's the best FIRST step?
++ Expand both descriptions: inputs, example queries, edge cases, and when to use each vs the other :: Descriptions are the primary tool-selection mechanism. This fixes the root cause cheaply.
+- Build a keyword router that picks the tool before Claude sees the message :: Over-engineered, and it bypasses Claude's language understanding.
+- Merge both into one universal tool :: Can be valid later, but it's more work than a first step needs.
+- Add 10 few-shot routing examples to the system prompt :: Adds tokens without fixing the vague descriptions.
+---
+@ D2 2.1 | Multi-agent research
+Two tools, analyze_content and analyze_document, have nearly identical descriptions and get mixed up. The first one is only used for web search results. Best fix?
++ Rename it to extract_web_results and rewrite its description to be web-specific :: Removing the functional overlap fixes the misrouting.
+- Delete both and let Claude summarize by itself :: Loses needed capabilities.
+- Add "IMPORTANT" in capitals to one description :: Doesn't remove the overlap.
+- Force analyze_document with tool_choice every time :: Then the web tool can never be used.
+---
+@ D2 2.1 | Multi-agent research
+A generic analyze_document tool is used for very different jobs: pulling numbers, summarizing, and checking claims. Results are inconsistent. What's the recommended redesign?
++ Split it into purpose-specific tools such as extract_data_points, summarize_content and verify_claim_against_source :: Specific tools with clear input/output contracts are chosen and used more reliably.
+- Add a "mode" parameter without describing the modes :: Still ambiguous.
+- Keep it, and add a longer system prompt :: Doesn't fix the overloaded tool.
+- Remove it and rely on built-in tools :: Built-ins don't do these jobs.
+---
+@ D2 2.1 | Customer support
+Tool descriptions are excellent, but Claude still prefers lookup_order for account questions. The system prompt says: "Always look up the order first for any customer question." What's the likely cause?
++ The system prompt's keyword-style instruction overrides the well-written descriptions :: System prompt wording can create unintended tool associations.
+- The descriptions are too long :: Detailed descriptions help.
+- The model needs a bigger context window :: Size isn't the problem.
+- MCP tools always lose to built-in tools :: Unrelated.
+---
+@ D2 2.1 | Developer productivity
+Which TWO things should a good tool description include? (Choose 2)
++ Example queries and the input formats it accepts :: These help Claude match requests to tools.
++ When to use it versus similar tools, and its edge cases or limits :: Boundaries prevent misrouting.
+- The internal database table names :: Not useful for selection.
+- Marketing language about how powerful the tool is :: Not useful.
+- The developer's name :: Irrelevant.
+---
+@ D2 2.2 | Customer support
+An MCP tool returns { "isError": true, "content": "Operation failed" } for every problem. The agent retries policy denials endlessly and gives up on brief timeouts. Fix?
++ Return structured errors: errorCategory (transient/validation/business/permission), isRetryable, and a clear message :: The agent can then choose the right recovery.
+- Return a JSON-RPC protocol error instead :: Tool failures should reach the model as results with isError so it can recover.
+- Hide errors and return empty results :: Empty would read as success with no data.
+- Always set isRetryable: true :: Policy denials would be retried pointlessly.
+---
+@ D2 2.2 | Customer support
+A refund request breaks a business rule (over the self-service limit). What should the tool return?
++ isError true, isRetryable false, and a customer-friendly explanation the agent can pass on :: The agent explains instead of retrying.
+- isError true, isRetryable true :: Retrying won't change the policy.
+- isError false and an empty result :: Hides that the request was refused.
+- A stack trace :: Not actionable for the agent or the customer.
+---
+@ D2 2.2 | Multi-agent research
+A search subagent's database query times out. What should it return?
++ An error marked as an access failure (e.g. transient timeout), with what was tried :: The coordinator can decide to retry or try another route.
+- An empty result list marked as success :: That says "nothing exists", which is false.
+- Nothing; just end :: The coordinator loses information.
+- A made-up placeholder result :: Fabrication.
+---
+@ D2 2.2 | Multi-agent research
+A search query succeeds but genuinely finds no matching records. How should this be reported?
++ As a successful result with zero matches (not an error) :: A valid empty result is different from a failure.
+- As isError true with category "transient" :: Nothing failed.
+- As isError true with category "permission" :: Nothing was denied.
+- By raising an exception :: It isn't an exceptional situation.
+---
+@ D2 2.2 | Multi-agent research
+Where should transient errors (like a brief timeout) be handled in a multi-agent system?
++ Locally in the subagent first, propagating to the coordinator only what it can't resolve, with partial results :: This avoids flooding the coordinator while keeping it informed.
+- Always at the coordinator, never in subagents :: Wasteful for simple retries.
+- Nowhere; abort the workflow :: One failure shouldn't kill everything.
+- In the end user's chat window :: Users shouldn't handle internal retries.
+---
+@ D2 2.2 | Customer support
+Which error category fits "customer_id must be in format C-12345, got '12345'"?
++ validation :: The input is malformed. Correcting the input fixes it.
+- transient :: Waiting won't change the input.
+- business :: It's not a policy decision.
+- permission :: It's not an access issue.
+---
+@ D2 2.3 | Multi-agent research
+A synthesis agent has 18 tools including web search, and it keeps starting web searches instead of writing. What's the principle to apply?
++ Restrict each agent to the tools its role needs :: Too many tools degrade selection, and agents misuse tools outside their role.
+- Give it even more tools so it has options :: Makes selection worse.
+- Remove the coordinator :: Unrelated.
+- Ask it politely to stop searching :: Doesn't remove the misuse surface.
+---
+@ D2 2.3 | Multi-agent research
+85% of the synthesis agent's verifications are quick fact checks (dates, names), and each one currently takes a round trip through the coordinator. Best design?
++ Give synthesis a scoped verify_fact tool for simple checks, and keep complex checks routed through the coordinator :: Least privilege for the common case, coordination kept for complex cases.
+- Give synthesis all the web search tools :: Over-provisioning that violates separation of concerns.
+- Batch all verifications to the end of synthesis :: Later synthesis steps may depend on the verified facts.
+- Pre-fetch everything the synthesis agent might need :: Speculative. It can't reliably predict what's needed.
+---
+@ D2 2.3 | Multi-agent research
+An agent only ever needs to read approved documents, but it has a generic fetch_url tool and sometimes fetches random sites. Best fix?
++ Replace fetch_url with load_document, which validates that the URL is an approved document :: A constrained alternative removes the misuse surface.
+- Lengthen fetch_url's description :: Still allows any URL.
+- Lower max_tokens :: Unrelated.
+- Log every fetch for later review :: Detects misuse but doesn't prevent it.
+---
+@ D2 2.3 | Data extraction
+You have three extraction tools (invoice, receipt, contract) and the incoming document type is unknown. You need structured output every time, not chat text. Which tool_choice?
++ {"type": "any"} :: Claude must call one of the tools and picks the right one.
+- {"type": "auto"} :: Claude may reply with text instead.
+- {"type": "tool", "name": "extract_invoice"} :: Would force the invoice schema on receipts and contracts.
+- {"type": "none"} :: Prevents tool use entirely.
+---
+@ D2 2.3 | Data extraction
+A pipeline must ALWAYS run extract_metadata before any enrichment tools. How do you guarantee that first step?
++ Force it with tool_choice {"type": "tool", "name": "extract_metadata"}, then handle enrichment in follow-up turns :: Forced selection guarantees that specific tool is called.
+- tool_choice "auto" with a strong instruction :: Not guaranteed.
+- tool_choice "any" :: Claude could pick an enrichment tool first.
+- Remove all enrichment tools permanently :: You still need them later.
+---
+@ D2 2.3 | Customer support
+What does tool_choice "auto" guarantee?
++ Nothing about tool use: Claude may call a tool or reply with text :: Only "any" or a forced tool guarantee a call.
+- That exactly one tool is called :: Not guaranteed.
+- That the most relevant tool is called :: Not guaranteed.
+- That no tool is called :: That's "none".
+---
+@ D2 2.4 | Developer productivity
+The team wants everyone to get the same GitHub MCP server when they clone the repo, without committing anyone's token. What do you do?
++ Add it to the project's .mcp.json with the token as ${GITHUB_TOKEN} :: Shared via git. Each developer's own environment variable fills the token.
+- Add it to each developer's ~/.claude.json :: Not shared through the repo.
+- Commit the real token in .mcp.json :: Leaks a secret.
+- Put the token in CLAUDE.md :: CLAUDE.md isn't for credentials, and it's committed.
+---
+@ D2 2.4 | Developer productivity
+A developer wants to try an experimental MCP server for a few days without affecting teammates. Where?
++ User scope in ~/.claude.json :: Personal and experimental servers live there.
+- The project's .mcp.json :: Would affect everyone.
+- CLAUDE.md :: Not a server configuration.
+- .claude/rules/ :: Rules are instructions, not servers.
+---
+@ D2 2.4 | Developer productivity
+Your team built a powerful MCP code-search tool, but Claude keeps using built-in Grep instead. Best fix?
++ Improve the MCP tool's description to explain its capabilities and outputs in detail :: Claude chooses by description, and a thin one loses to familiar built-ins.
+- Uninstall Grep from everyone's machine :: Heavy-handed, and Grep is still useful.
+- Force the MCP tool with tool_choice on every turn :: Breaks all other tool use.
+- Write "prefer the MCP tool" in CLAUDE.md :: Weaker than fixing the description at the source.
+---
+@ D2 2.4 | Developer productivity
+The team needs Jira integration. A maintained community MCP server for Jira exists. What's the recommendation?
++ Use the existing community server; build custom servers only for team-specific workflows :: Don't rebuild standard integrations.
+- Build your own Jira server so you control it :: Unnecessary effort for a standard integration.
+- Use Jira through raw curl commands in Bash :: Loses structured tools and descriptions.
+- Skip Jira integration :: Doesn't meet the need.
+---
+@ D2 2.4 | Developer productivity
+An agent makes 15 exploratory tool calls each session just to learn the database schema and the list of open issues. What would reduce that?
++ Expose the schema and issue summaries as MCP resources :: Resources give visibility into available data without exploratory calls.
+- Add more search tools :: More calls, not fewer.
+- Increase the iteration cap :: Allows more waste.
+- Ask Claude to guess the schema :: Leads to errors.
+---
+@ D2 2.4 | Developer productivity
+Two MCP servers are configured: GitHub and Postgres. When are their tools available to the agent?
++ All tools from both servers are discovered at connection time and available at the same time :: That's how MCP server discovery works.
+- Only one server's tools at a time; you switch manually :: Not true.
+- Postgres tools only after GitHub tools fail :: No such fallback order.
+- Only after Claude asks for them by name :: Tools are discovered at connection.
+---
+@ D2 2.5 | Developer productivity
+You need to find every place the function calculateTax is called. Which built-in tool?
++ Grep :: It searches file contents for patterns.
+- Glob :: Glob matches file names and paths, not content.
+- Read on every file :: Wasteful. Search first.
+- Write :: Writes files, doesn't search.
+---
+@ D2 2.5 | Developer productivity
+You need a list of all files named *.spec.ts anywhere in the repo. Which built-in tool?
++ Glob with **/*.spec.ts :: Glob matches file paths by pattern.
+- Grep for "spec" :: Searches contents and would match many irrelevant files.
+- Read the root folder :: Read reads files, not directory trees.
+- Bash rm :: Destructive and unrelated.
+---
+@ D2 2.5 | Developer productivity
+Edit fails because the text you want to replace appears 4 times in the file. What's the reliable fallback in the exam's view?
++ Read the full file, then Write the corrected version :: When Edit can't find a unique anchor, Read + Write is the reliable fallback.
+- Retry the same Edit call :: It will fail again.
+- Delete the file :: Destructive.
+- Use Glob :: Glob doesn't edit.
+---
+@ D2 2.5 | Developer productivity
+What's the recommended way to understand an unfamiliar codebase with built-in tools?
++ Grep for entry points, then Read to follow imports and trace the flow :: Builds understanding step by step without flooding the context.
+- Read every file upfront :: Floods the context.
+- Only use Glob :: Finds names but not how things connect.
+- Ask the user to explain the code :: Not using the tools.
+---
+@ D2 2.5 | Developer productivity
+A module re-exports many functions from a wrapper file, and you need to find where each one is used. Best approach?
++ First list all exported names from the wrapper, then Grep for each name across the codebase :: The guide describes tracing usage through wrapper modules this way.
+- Grep only for the wrapper's file name :: Misses direct uses of the exported functions.
+- Glob for files with "wrapper" in their name :: Finds names, not usages.
+- Read the whole repo :: Inefficient.
